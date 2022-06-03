@@ -6,4 +6,5 @@ export default {
 	lightblue: "#CCEBFF",
 	warning: "#FF1A1A",
 	lightred: "#FFCCCC",
+	lightorange: "#FFCC99",
 };

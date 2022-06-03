@@ -64,7 +64,7 @@ function Home(props) {
 						<EvilIcons name='bell' size={28} color='black' />
 					</TouchableOpacity>
 
-					{/* 0👇 A button to show and hide search. */}
+					{/* 👇 A button to show and hide search. */}
 					<TouchableOpacity activeOpacity={0.9} onPress={handleShowSearch}>
 						<EvilIcons
 							name='search'

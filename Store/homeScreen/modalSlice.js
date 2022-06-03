@@ -4,6 +4,7 @@ const initialState = {
 	descriptionVisible: false,
 	searchVisible: false,
 	profileVisible: false,
+	notificationVisible: false,
 };
 
 export const modalSlice = createSlice({
@@ -28,6 +29,12 @@ export const modalSlice = createSlice({
 		hideProfile: (state, actions) => {
 			state.profileVisible = false;
 		},
+		showNofication: (state, actions) => {
+			state.notificationVisible = true;
+		},
+		hideNotification: (state, actions) => {
+			state.notificationVisible = false;
+		},
 	},
 });
 
@@ -38,6 +45,8 @@ export const {
 	showSearch,
 	hideProfile,
 	hideSearch,
+	showNofication,
+	hideNotification,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

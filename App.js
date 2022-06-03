@@ -1,12 +1,11 @@
-import "react-native-gesture-handler";
 import * as React from "react";
 import {Button, View, StyleSheet, StatusBar} from "react-native";
-import {createDrawerNavigator} from "@react-navigation/drawer";
 import {NavigationContainer} from "@react-navigation/native";
 import Home from "./components/screens/Home";
 import Notification from "./components/screens/Notification";
 import {FontAwesome} from "@expo/vector-icons";
 import {AntDesign} from "@expo/vector-icons";
+import {MaterialIcons} from "@expo/vector-icons";
 import {Body, BodyS, HeadingM, HeadingS} from "./components/typography";
 import color from "./components/color";
 import {store} from "./Store";
@@ -19,10 +18,11 @@ import GenderForm from "./components/screens/Signup/genderForm";
 import ContactsForm from "./components/screens/Signup/contactsForm";
 import LocationForm from "./components/screens/Signup/locationForm";
 import PasswordForm from "./components/screens/Signup/passwordForm";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 
 // initiating screens functions.
 const Stack = createStackNavigator();
-const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 
 // 👇 Handling authentication on the app.
 function MyAuth() {
@@ -70,58 +70,38 @@ function MyAuth() {
 }
 
 // 👇 app contents.
-function MyDrawer() {
+function MyTabs() {
 	return (
-		<Drawer.Navigator
+		<Tab.Navigator
 			initialRouteName='Home'
 			screenOptions={{
-				drawerActiveBackgroundColor: color.lightgray,
-				drawerActiveTintColor: "black",
-				drawerStatusBarAnimation: "fade",
-				drawerItemStyle: {
-					width: "100%",
-					marginLeft: 0,
-					borderRadius: 0,
-				},
-				drawerHideStatusBarOnOpen: false,
-				drawerLabelStyle: styles.drawerText,
+				tabBarActiveTintColor: "black",
+				headerShown: false,
 			}}>
-			<Drawer.Screen
-				name='Profile'
-				component={Home}
-				options={{
-					headerShown: false,
-					drawerIcon: () => (
-						<View style={styles.rowContainer}>
-							<View style={styles.wordsContainer}>
-								<HeadingM style={styles.LogoText}>Smart Maid</HeadingM>
-							</View>
-						</View>
-					),
-					drawerLabel: "",
-					drawerActiveBackgroundColor: "white",
-				}}
-			/>
-			<Drawer.Screen
+			<Tab.Screen
 				name='Home'
 				component={Home}
 				options={{
 					headerShown: false,
-					drawerIcon: () => <AntDesign name='home' size={23} color='black' />,
-					drawerLabel: "Home",
+					title: "",
+					tabBarIcon: ({color, size}) => (
+						<MaterialIcons name='home' size={size} color={color} />
+					),
+					tabBarLabel: "",
 				}}
 			/>
-			<Drawer.Screen
+			<Tab.Screen
 				name='Notifications'
 				component={Notification}
 				options={{
 					headerShown: false,
-					drawerIcon: () => (
-						<FontAwesome name='bell-o' size={20} color='black' />
+					tabBarIcon: ({color, size}) => (
+						<MaterialIcons name='pending-actions' size={size} color={color} />
 					),
+					tabBarLabel: "",
 				}}
 			/>
-		</Drawer.Navigator>
+		</Tab.Navigator>
 	);
 }
 
@@ -131,7 +111,7 @@ export default function App() {
 		<Provider store={store}>
 			<NavigationContainer>
 				<StatusBar backgroundColor='white' />
-				{true ? <MyDrawer /> : <MyAuth />}
+				{true ? <MyTabs /> : <MyAuth />}
 			</NavigationContainer>
 		</Provider>
 	);

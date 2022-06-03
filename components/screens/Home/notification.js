@@ -8,14 +8,26 @@ import {
 } from "react-native";
 import color from "../../color";
 import {Body} from "../../typography";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {Ionicons} from "@expo/vector-icons";
-import TopBar from "../TopBar";
+import {useDispatch} from "react-redux";
+import {hideNotification} from "../../../Store/homeScreen/modalSlice";
 
-function Notification(props) {
+function Profile(props) {
+	// initializing dispatch.
+	const dispatch = useDispatch();
+
+	// function to change state of the visible property to hide the modal
+	const handleHide = () => {
+		dispatch(hideNotification());
+	};
+
 	return (
 		<View style={styles.screen}>
-			<StatusBar backgroundColor='white' />
-			<TopBar />
+			<StatusBar backgroundColor={color.lightgray} />
+			<TouchableOpacity activeOpacity={0.9} onPress={handleHide}>
+				<Ionicons name='arrow-back' size={24} color='black' />
+			</TouchableOpacity>
 			<View>
 				<Body>notifications</Body>
 			</View>
@@ -41,4 +53,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default memo(Notification);
+export default memo(Profile);

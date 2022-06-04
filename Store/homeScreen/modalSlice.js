@@ -6,6 +6,10 @@ const initialState = {
 	profileVisible: false,
 	notificationVisible: false,
 	postVisible: false,
+	genderPreferenceVisible: false,
+	jobTypeVisible: false,
+	salaryVisible: false,
+	postDescVisible: false,
 };
 
 export const modalSlice = createSlice({
@@ -42,6 +46,30 @@ export const modalSlice = createSlice({
 		hidePost: (state, actions) => {
 			state.postVisible = false;
 		},
+		showGenderPreference: (state, actions) => {
+			state.genderPreferenceVisible = true;
+		},
+		hideGenderPreference: (state, actions) => {
+			state.genderPreferenceVisible = false;
+		},
+		showJobType: (state, actions) => {
+			state.jobTypeVisible = true;
+		},
+		hideJobType: (state, actions) => {
+			state.jobTypeVisible = false;
+		},
+		showSalary: (state, actions) => {
+			state.salaryVisible = true;
+		},
+		hideSalary: (state, actions) => {
+			state.salaryVisible = false;
+		},
+		showPostDesc: (state, actions) => {
+			state.postDescVisible = true;
+		},
+		hidePostDesc: (state, actions) => {
+			state.postDescVisible = false;
+		},
 	},
 });
 
@@ -56,6 +84,14 @@ export const {
 	hideNotification,
 	showPost,
 	hidePost,
+	showGenderPreference,
+	hideGenderPreference,
+	showJobType,
+	hideJobType,
+	showSalary,
+	hideSalary,
+	showPostDesc,
+	hidePostDesc,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

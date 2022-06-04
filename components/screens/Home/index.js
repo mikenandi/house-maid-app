@@ -19,7 +19,7 @@ import {
 	showSearch,
 } from "../../../Store/homeScreen/modalSlice";
 import TopBar from "../TopBar";
-import Post from "../Home/post-job";
+import Post from "../Home/PostJob";
 
 function Home(props) {
 	//initializing dispatch

@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		fontSize: 25,
 		width: 180,
-		borderRadius: 10,
+		borderRadius: 0,
 		marginTop: 10,
 	},
 	inputContainer: {

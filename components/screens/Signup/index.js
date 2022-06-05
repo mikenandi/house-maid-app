@@ -19,8 +19,7 @@ import {
 	HeadingS,
 } from "../../typography";
 import {Ionicons} from "@expo/vector-icons";
-import {FontAwesome5} from "@expo/vector-icons";
-import {MaterialIcons} from "@expo/vector-icons";
+import {FontAwesome5, MaterialIcons} from "@expo/vector-icons";
 import {useDispatch} from "react-redux";
 import {roleEmployer, roleMaid} from "../../../Store/homeScreen/registerSlice";
 
@@ -71,6 +70,15 @@ function Register(props) {
 							<Ionicons name='ios-ribbon' size={40} color='white' />
 						</View>
 						<HeadingS style={styles.loginText}>Employer</HeadingS>
+					</View>
+				</TouchableOpacity>
+
+				<TouchableOpacity activeOpacity={0.9} onPress={handleEmployer}>
+					<View style={styles.buttoncontainer}>
+						<View style={styles.iconContainer}>
+							<MaterialIcons name='support-agent' size={40} color='white' />
+						</View>
+						<HeadingS style={styles.loginText}>Agent</HeadingS>
 					</View>
 				</TouchableOpacity>
 			</View>

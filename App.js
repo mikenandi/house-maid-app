@@ -111,7 +111,7 @@ export default function App() {
 		<Provider store={store}>
 			<NavigationContainer>
 				<StatusBar backgroundColor='white' />
-				{true ? <MyTabs /> : <MyAuth />}
+				{false ? <MyTabs /> : <MyAuth />}
 			</NavigationContainer>
 		</Provider>
 	);

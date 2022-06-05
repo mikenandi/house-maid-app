@@ -72,7 +72,6 @@ function Salary(props) {
 						placeholder='descriptions'
 						style={styles.textInput}
 						multiline={true}
-						numberOfLines={6}
 					/>
 				</View>
 			</View>
@@ -156,8 +155,8 @@ const styles = StyleSheet.create({
 		padding: 10,
 		borderWidth: 1,
 		fontSize: 16,
-		width: 240,
-		borderRadius: 10,
+		width: 260,
+		borderRadius: 0,
 		borderColor: "black",
 	},
 	inputContainer: {

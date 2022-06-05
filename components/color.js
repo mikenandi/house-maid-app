@@ -7,4 +7,5 @@ export default {
 	warning: "#FF1A1A",
 	lightred: "#FFCCCC",
 	lightorange: "#FFCC99",
+	blue: "#0336FF",
 };

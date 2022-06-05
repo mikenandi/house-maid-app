@@ -50,7 +50,7 @@ function Home(props) {
 				activeOpacity={0.9}
 				onPress={handlePost}
 				style={styles.buttonContaier}>
-				<AntDesign name='plus' size={20} color='black' />
+				<AntDesign name='plus' size={20} color='white' />
 				<Body style={styles.floatingText}>Post job</Body>
 			</TouchableOpacity>
 
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 10,
 	},
 	buttonContaier: {
-		backgroundColor: color.lightblue,
+		backgroundColor: color.blue,
 		padding: 15,
 		width: 120,
 		flexDirection: "row",
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 	},
 	floatingText: {
-		color: "black",
+		color: "white",
 		fontWeight: "bold",
 	},
 });

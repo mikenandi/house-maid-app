@@ -10,10 +10,11 @@ import {
 import color from "../../color";
 import {Body, BodyS, HeadingM, HeadingS} from "../../typography";
 import {Entypo} from "@expo/vector-icons";
-import {MaterialCommunityIcons} from "@expo/vector-icons";
+import {MaterialCommunityIcons, Feather} from "@expo/vector-icons";
 import {Ionicons} from "@expo/vector-icons";
 import {useDispatch} from "react-redux";
 import {hideProfile} from "../../../Store/homeScreen/modalSlice";
+import * as SecureStore from "expo-secure-store";
 
 function Profile(props) {
 	// initializing dispatch.
@@ -24,14 +25,30 @@ function Profile(props) {
 		dispatch(hideProfile());
 	};
 
+	const handleLogout = async () => {
+		try {
+			await SecureStore.deleteItemAsync("authToken");
+			props.navigation.navigate("Home");
+			return;
+		} catch (error) {
+			return;
+		}
+	};
+
 	return (
 		<View style={styles.container}>
 			<StatusBar backgroundColor={color.lightorange} />
 			<View style={styles.topbarContainer}>
-				<TouchableOpacity activeOpacity={0.9} onPress={handleHide} style>
-					<Ionicons name='arrow-back' size={30} color='white' />
+				<View style={styles.topbarLeftContainer}>
+					<TouchableOpacity activeOpacity={0.9} onPress={handleHide} style>
+						<Ionicons name='arrow-back' size={30} color={color.primary} />
+					</TouchableOpacity>
+					<HeadingM style={styles.headerText}>Profile</HeadingM>
+				</View>
+				<TouchableOpacity activeOpacity={0.9} onPress={handleLogout}>
+					<Feather name='log-out' size={24} color={color.primary} />
+					<Body style={styles.logoutText}>Log out</Body>
 				</TouchableOpacity>
-				<HeadingM style={styles.headerText}>Profile</HeadingM>
 			</View>
 			<View>
 				<View style={styles.avatarContainer}>
@@ -84,13 +101,14 @@ const styles = StyleSheet.create({
 	},
 	topbarContainer: {
 		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
 		backgroundColor: color.lightorange,
 		padding: 15,
 	},
 	headerText: {
 		marginLeft: 15,
-		color: "white",
-		fontWeight: "bold",
+		color: color.primary,
 	},
 	avatar: {
 		width: 120,
@@ -102,6 +120,7 @@ const styles = StyleSheet.create({
 		padding: 10,
 		justifyContent: "center",
 		alignItems: "center",
+		borderBottomRightRadius: 80,
 	},
 	locationContainer: {
 		flexDirection: "row",
@@ -124,6 +143,13 @@ const styles = StyleSheet.create({
 		width: "80%",
 		paddingBottom: 5,
 		borderBottomColor: color.lightgray,
+	},
+	topbarLeftContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+	},
+	logoutText: {
+		color: color.primary,
 	},
 });
 

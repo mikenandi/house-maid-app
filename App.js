@@ -19,6 +19,7 @@ import ContactsForm from "./components/screens/Signup/contactsForm";
 import LocationForm from "./components/screens/Signup/locationForm";
 import PasswordForm from "./components/screens/Signup/passwordForm";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import * as SecureStore from "expo-secure-store";
 
 // initiating screens functions.
 const Stack = createStackNavigator();
@@ -107,11 +108,28 @@ function MyTabs() {
 
 // 👇
 export default function App() {
+	// checking if there is any token saved
+	const [authToken, setAuthToken] = React.useState("");
+
+	const getToken = async () => {
+		try {
+			let token = await SecureStore.getItemAsync("authToken");
+			setAuthToken(token);
+			return;
+		} catch (error) {
+			return;
+		}
+	};
+
+	React.useEffect(() => {
+		getToken();
+	}, []);
+
 	return (
 		<Provider store={store}>
 			<NavigationContainer>
 				<StatusBar backgroundColor='white' />
-				{false ? <MyTabs /> : <MyAuth />}
+				{!!authToken ? <MyTabs /> : <MyAuth />}
 			</NavigationContainer>
 		</Provider>
 	);

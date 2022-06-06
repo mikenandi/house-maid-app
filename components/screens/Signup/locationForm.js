@@ -1,4 +1,4 @@
-import React, {memo} from "react";
+import React, {memo, useState} from "react";
 import {
 	View,
 	Button,
@@ -7,6 +7,7 @@ import {
 	StatusBar,
 	TextInput,
 	Pressable,
+	ScrollView,
 } from "react-native";
 import color from "../../color";
 import {
@@ -18,21 +19,68 @@ import {
 	BodyS,
 } from "../../typography";
 import {MaterialIcons} from "@expo/vector-icons";
+import {useDispatch} from "react-redux";
+import {
+	deleteLocation,
+	saveLocation,
+} from "../../../Store/homeScreen/registerSlice";
 
 function LocationForm(props) {
+	// intializing dispatch
+	const dispatch = useDispatch();
+
+	// states for filling forms
+	const [error, set_error] = useState("");
+	const [region, set_region] = useState("");
+	const [district, set_district] = useState("");
+	const [ward, set_ward] = useState("");
+	const [street, set_street] = useState("");
+
+	// functionts to handle inputing values
+	const handleRegion = (region) => {
+		set_region(region);
+		return;
+	};
+
+	const handleDistrict = (district) => {
+		set_district(district);
+		return;
+	};
+
+	const handleWard = (ward) => {
+		set_ward(ward);
+		return;
+	};
+
+	const handleStreet = (street) => {
+		set_street(street);
+		return;
+	};
 	// going to register
 	const handleGoToRegister = () => {
 		// console.log(props.navigation.navigate("Signup"));
 		// props.navigation.navigate('')
 		props.navigation.navigate("Register");
+		return;
 	};
 
 	const handleGoPrev = () => {
+		dispatch(deleteLocation());
 		props.navigation.navigate("GenderForm");
+		return;
 	};
 
 	const handleGoNext = () => {
+		if (!region || !district || !ward || !street) {
+			set_error("fill all parts before going next step");
+			setTimeout(() => {
+				set_error("");
+			}, 4000);
+			return;
+		}
+		dispatch(saveLocation({region, district, ward, street}));
 		props.navigation.navigate("ContactsForm");
+		return;
 	};
 
 	return (
@@ -47,18 +95,40 @@ function LocationForm(props) {
 				<HeadingM style={styles.titleText}>Location</HeadingM>
 
 				{/* username input area with a caption at the top. */}
+				{!!error && <Caption style={styles.errorText}>{error}</Caption>}
+
 				<Caption style={styles.labelText}>Region</Caption>
-				<TextInput placeholder='Region' style={styles.inputText} />
+				<TextInput
+					placeholder='Region'
+					style={styles.inputText}
+					onChangeText={handleRegion}
+					value={region}
+				/>
 
 				{/* a place where the user will be allowed to enter his/ her password. */}
 				<Caption style={styles.labelText}>District</Caption>
-				<TextInput placeholder='District' style={styles.inputText} />
+				<TextInput
+					placeholder='District'
+					style={styles.inputText}
+					onChangeText={handleDistrict}
+					value={district}
+				/>
 
 				<Caption style={styles.labelText}>Ward</Caption>
-				<TextInput placeholder='Ward' style={styles.inputText} />
+				<TextInput
+					placeholder='Ward'
+					style={styles.inputText}
+					onChangeText={handleWard}
+					value={ward}
+				/>
 
 				<Caption style={styles.labelText}>Street</Caption>
-				<TextInput placeholder='Street' style={styles.inputText} />
+				<TextInput
+					placeholder='Street'
+					style={styles.inputText}
+					onChangeText={handleStreet}
+					value={street}
+				/>
 			</View>
 			{/* for going next or prev state. */}
 			<View style={styles.stepContainer}>
@@ -158,6 +228,11 @@ const styles = StyleSheet.create({
 		backgroundColor: color.lightgray,
 		padding: 10,
 		borderRadius: 20,
+	},
+	errorText: {
+		color: "red",
+		marginLeft: 5,
+		textTransform: "capitalize",
 	},
 });
 

@@ -1,4 +1,4 @@
-import React, {memo} from "react";
+import React, {memo, useState} from "react";
 import {
 	View,
 	Button,
@@ -18,13 +18,103 @@ import {
 	BodyS,
 } from "../../typography";
 import {MaterialIcons} from "@expo/vector-icons";
+import {useDispatch, useSelector} from "react-redux";
+import {deletePassword} from "../../../Store/homeScreen/registerSlice";
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function PasswordForm(props) {
+	//initializing
+	const dispatch = useDispatch();
+
+	// getting data from register.
+	const register = useSelector((state) => {
+		return state.register;
+	});
+
+	// console.log(register);
+
+	const [error, set_error] = useState("");
+	const [password, set_password] = useState("");
+	const [confirm_password, set_confirm_password] = useState("");
+
+	const handlePassword = (password) => {
+		set_password(password);
+		return;
+	};
+
+	const handleConfirmPassword = (confirm_password) => {
+		set_confirm_password(confirm_password);
+		return;
+	};
+
 	// going to register
 	const handleGoPrev = () => {
 		// console.log(props.navigation.navigate("Signup"));
 		// props.navigation.navigate('')
+		dispatch(deletePassword());
 		props.navigation.navigate("ContactsForm");
+		return;
+	};
+
+	const saveToken = async (key, value) => {
+		await SecureStore.setItemAsync(key, value);
+		return;
+	};
+
+	const saveCredentials = async (key, value) => {
+		await AsyncStorage.setItem(key, value);
+		return;
+	};
+	const handleRegister = () => {
+		if (password.length < 6) {
+			set_error("Too short password, min 6 characters.");
+			setTimeout(() => {
+				set_error("");
+			}, 5000);
+			return;
+		}
+
+		if (password !== confirm_password) {
+			set_error("Passwords do not match");
+			setTimeout(() => {
+				set_error("");
+			}, 5000);
+			return;
+		}
+
+		axios({
+			method: "POST",
+			url: "http://nuhu-backend.herokuapp.com/api/v1/register",
+			data: {
+				first_name: register.first_name,
+				last_name: register.last_name,
+				email: register.email,
+				password: password,
+				phone_number: register.phoneNumber,
+				gender: register.gender,
+				birthdate: register.birthDate,
+				region: register.location.region,
+				district: register.location.district,
+				ward: register.location.ward,
+				street: register.location.street,
+				role: register.role,
+			},
+		})
+			.then((response) => {
+				saveToken("authToken", response.data.data.auth_token);
+				// saving id
+				saveCredentials("user_id", response.data.data.user_id);
+				// saving role
+				saveCredentials("type", response.data.data.role);
+
+				return;
+			})
+			.catch((error) => {
+				set_error(error.response.message);
+				return;
+			});
 	};
 
 	return (
@@ -38,12 +128,18 @@ function PasswordForm(props) {
 				{/* title of the activity in the screen. */}
 				<HeadingM style={styles.titleText}>Password</HeadingM>
 
-				{/* username input area with a caption at the top. */}
+				{
+					//hiding error when there is nothing to see.
+					!!error && <Caption style={styles.errorText}>{error}</Caption>
+				}
+
 				<Caption style={styles.labelText}>password</Caption>
 				<TextInput
 					placeholder='password'
 					secureTextEntry={true}
 					style={styles.inputText}
+					value={password}
+					onChangeText={handlePassword}
 				/>
 
 				{/* a place where the user will be allowed to enter his/ her password. */}
@@ -52,12 +148,17 @@ function PasswordForm(props) {
 					placeholder='password'
 					secureTextEntry={true}
 					style={styles.inputText}
+					value={confirm_password}
+					onChangeText={handleConfirmPassword}
 				/>
 
-				{/* A buton for login */}
-				<View style={styles.buttoncontainer}>
+				{/* A buton for registering. */}
+				<TouchableOpacity
+					style={styles.buttoncontainer}
+					activeOpacity={0.8}
+					onPress={handleRegister}>
 					<ButtonText style={styles.loginText}>Register</ButtonText>
-				</View>
+				</TouchableOpacity>
 			</View>
 
 			{
@@ -150,6 +251,11 @@ const styles = StyleSheet.create({
 		backgroundColor: color.lightgray,
 		padding: 10,
 		borderRadius: 20,
+	},
+	errorText: {
+		color: "red",
+		marginLeft: 10,
+		textTransform: "capitalize",
 	},
 });
 

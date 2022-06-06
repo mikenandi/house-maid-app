@@ -1,4 +1,4 @@
-import React, {memo} from "react";
+import React, {memo, useState} from "react";
 import {
 	View,
 	Button,
@@ -19,21 +19,50 @@ import {
 	he,
 } from "../../typography";
 import {Ionicons, MaterialIcons} from "@expo/vector-icons";
+import {useDispatch} from "react-redux";
+import {deleteName, saveName} from "../../../Store/homeScreen/registerSlice";
 
 function NameForm(props) {
+	// setting states
+	const [error, set_error] = useState("");
+	const [first_name, set_first_name] = useState("");
+	const [last_name, set_last_name] = useState("");
+
+	// initating dispatch
+	const dispatch = useDispatch();
+
 	// going to register
 	const handleGoToRegister = () => {
-		// console.log(props.navigation.navigate("Signup"));
 		// props.navigation.navigate('')
 		props.navigation.navigate("Register");
 	};
 
 	const handleGoNext = () => {
+		if (!first_name || !last_name) {
+			set_error("fill all fields");
+
+			setTimeout(() => {
+				set_error("");
+			}, 5000);
+			return;
+		}
+
+		dispatch(saveName({first_name, last_name}));
 		props.navigation.navigate("GenderForm");
+		return;
 	};
 
 	const handleGoPrev = () => {
+		dispatch(deleteName());
 		props.navigation.navigate("Register");
+	};
+
+	const handleFirstName = (first_name) => {
+		set_first_name(first_name);
+	};
+
+	const handleLastName = (last_name) => {
+		set_last_name(last_name);
 	};
 
 	return (
@@ -48,12 +77,24 @@ function NameForm(props) {
 				<HeadingM style={styles.titleText}>Names</HeadingM>
 
 				{/* username input area with a caption at the top. */}
+				{!!error && <Caption style={styles.errorText}>{error}</Caption>}
+
 				<Caption style={styles.labelText}>First Name</Caption>
-				<TextInput placeholder='First name' style={styles.inputText} />
+				<TextInput
+					placeholder='First name'
+					style={styles.inputText}
+					onChangeText={handleFirstName}
+					value={first_name}
+				/>
 
 				{/* a place where the user will be allowed to enter his/ her password. */}
 				<Caption style={styles.labelText}>Last Name</Caption>
-				<TextInput placeholder='Last name' style={styles.inputText} />
+				<TextInput
+					placeholder='Last name'
+					style={styles.inputText}
+					onChangeText={handleLastName}
+					value={last_name}
+				/>
 			</View>
 			{/* for going next or prev state. */}
 			<View style={styles.stepContainer}>
@@ -153,6 +194,11 @@ const styles = StyleSheet.create({
 		backgroundColor: color.lightgray,
 		padding: 10,
 		borderRadius: 20,
+	},
+	errorText: {
+		color: "red",
+		marginLeft: 10,
+		textTransform: "capitalize",
 	},
 });
 

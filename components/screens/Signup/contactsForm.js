@@ -18,16 +18,48 @@ import {
 	BodyS,
 } from "../../typography";
 import {Ionicons, MaterialIcons} from "@expo/vector-icons";
+import {useDispatch} from "react-redux";
+import {
+	deleteContacts,
+	saveContacts,
+} from "../../../Store/homeScreen/registerSlice";
 
 function ContactsForm(props) {
-	// going to register
+	// initializing dispatch
+	const dispatch = useDispatch();
+
+	// intilizing states
+	const [error, set_error] = React.useState("");
+	const [email, set_email] = React.useState("");
+	const [phone_number, set_phone_number] = React.useState("");
+
+	const handleEmail = (email) => {
+		set_email(email);
+		return;
+	};
+
+	const handlePhoneNumber = (phone_number) => {
+		set_phone_number(phone_number);
+		return;
+	};
 
 	const handleGoPrev = () => {
+		dispatch(deleteContacts());
 		props.navigation.navigate("LocationForm");
 	};
 
 	const handleGoNext = () => {
+		if (!email && !phone_number) {
+			set_error("fill all fields before going next step.");
+			setTimeout(() => {
+				set_error("");
+			}, 5000);
+			return;
+		}
+
+		dispatch(saveContacts({email, phone_number}));
 		props.navigation.navigate("PasswordForm");
+		return;
 	};
 
 	return (
@@ -42,12 +74,25 @@ function ContactsForm(props) {
 				<HeadingM style={styles.titleText}>Contacts</HeadingM>
 
 				{/* username input area with a caption at the top. */}
+				{!!error && <Caption style={styles.errorText}>{error}</Caption>}
+
 				<Caption style={styles.labelText}>Email</Caption>
-				<TextInput placeholder='email' style={styles.inputText} />
+				<TextInput
+					placeholder='email'
+					style={styles.inputText}
+					onChangeText={handleEmail}
+					value={email}
+				/>
 
 				{/* a place where the user will be allowed to enter his/ her password. */}
 				<Caption style={styles.labelText}>Phone Number</Caption>
-				<TextInput placeholder='Phone number' style={styles.inputText} />
+				<TextInput
+					placeholder='Phone number'
+					style={styles.inputText}
+					keyboardType='number-pad'
+					onChangeText={handlePhoneNumber}
+					value={phone_number}
+				/>
 			</View>
 			{/* for going next or prev state. */}
 			<View style={styles.stepContainer}>
@@ -147,6 +192,11 @@ const styles = StyleSheet.create({
 		backgroundColor: color.lightgray,
 		padding: 10,
 		borderRadius: 20,
+	},
+	errorText: {
+		color: "red",
+		marginLeft: 10,
+		textTransform: "capitalize",
 	},
 });
 

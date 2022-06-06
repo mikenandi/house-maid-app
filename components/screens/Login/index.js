@@ -18,12 +18,70 @@ import {
 	BodyS,
 } from "../../typography";
 import {Ionicons} from "@expo/vector-icons";
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function Login(props) {
+	// initializing states
+	const [error, set_error] = React.useState("");
+	const [email, set_email] = React.useState("");
+	const [password, set_password] = React.useState("");
+
+	// functions to handle the inputs.
+	const handleEmail = (email) => {
+		set_email(email);
+		return;
+	};
+
+	const handlePassword = (password) => {
+		set_password(password);
+		return;
+	};
+
+	const handleLogin = async () => {
+		try {
+			if (!email || !password) {
+				set_error("fill all fields");
+
+				setTimeout(() => {
+					set_error("");
+				}, 3000);
+
+				return;
+			}
+
+			let response = await axios({
+				method: "POST",
+				url: "http://nuhu-backend.herokuapp.com/api/v1/login",
+				data: {
+					email: email,
+					password: password,
+				},
+			});
+
+			await SecureStore.setItemAsync(
+				"authToken",
+				response.data.data.auth_token,
+			);
+
+			await AsyncStorage.setItem("user_id", response.data.data.user_id);
+			await AsyncStorage.setItem("type", response.data.data.user_role);
+
+			// initializing states.
+			// set_email("");
+			// set_password("");
+
+			console.log(props.navigation);
+			return;
+		} catch (error) {
+			console.log(error.message);
+			return;
+		}
+	};
 	// going to register
 	const handleGoToRegister = () => {
-		// console.log(props.navigation.navigate("Signup"));
-		// props.navigation.navigate('')
+		// Going to register route.
 		props.navigation.navigate("Register");
 	};
 
@@ -39,8 +97,14 @@ function Login(props) {
 				<HeadingM style={styles.titleText}>Login</HeadingM>
 
 				{/* username input area with a caption at the top. */}
-				<Caption style={styles.labelText}>username</Caption>
-				<TextInput placeholder='username' style={styles.inputText} />
+				{!!error && <Caption style={styles.errorText}>{error}</Caption>}
+				<Caption style={styles.labelText}>email</Caption>
+				<TextInput
+					placeholder='email'
+					style={styles.inputText}
+					onChangeText={handleEmail}
+					value={email}
+				/>
 
 				{/* a place where the user will be allowed to enter his/ her password. */}
 				<Caption style={styles.labelText}>password</Caption>
@@ -48,20 +112,25 @@ function Login(props) {
 					placeholder='password'
 					secureTextEntry={true}
 					style={styles.inputText}
+					value={password}
+					onChangeText={handlePassword}
 				/>
 
 				{/* A buton for login */}
-				<View style={styles.buttoncontainer}>
+				<TouchableOpacity
+					style={styles.buttoncontainer}
+					activeOpacity={0.7}
+					onPress={handleLogin}>
 					<ButtonText style={styles.loginText}>Login</ButtonText>
-				</View>
+				</TouchableOpacity>
 
 				{/* for registering new user */}
-				<BodyS style={styles.descText}>
-					Don't have account?{" "}
+				<View style={styles.bottomContainer}>
+					<BodyS style={styles.descText}>Don't have account? </BodyS>
 					<Pressable onPress={handleGoToRegister}>
 						<Body style={styles.registerText}>Register</Body>
 					</Pressable>
-				</BodyS>
+				</View>
 			</View>
 		</View>
 	);
@@ -125,6 +194,16 @@ const styles = StyleSheet.create({
 	},
 	titleText: {
 		color: color.dimblack,
+	},
+	bottomContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginTop: 5,
+	},
+	errorText: {
+		color: "red",
+		marginLeft: 10,
+		textTransform: "capitalize",
 	},
 });
 

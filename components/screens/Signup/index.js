@@ -21,7 +21,11 @@ import {
 import {Ionicons} from "@expo/vector-icons";
 import {FontAwesome5, MaterialIcons} from "@expo/vector-icons";
 import {useDispatch} from "react-redux";
-import {roleEmployer, roleMaid} from "../../../Store/homeScreen/registerSlice";
+import {
+	roleEmployer,
+	roleMaid,
+	roleAgent,
+} from "../../../Store/homeScreen/registerSlice";
 
 function Register(props) {
 	//setting up dispatch
@@ -29,19 +33,26 @@ function Register(props) {
 
 	// going to register
 	const handleGoToLogin = () => {
-		props.navigation.navigate("Register");
+		// props.navigation.navigate("Register");
 	};
 
 	const handleGoNext = () => {
-		props.navigation.navigate("NameForm");
+		// props.navigation.navigate("NameForm");
 	};
 
 	const handleMaid = () => {
 		dispatch(roleMaid());
+		props.navigation.navigate("NameForm");
 	};
 
 	const handleEmployer = () => {
 		dispatch(roleEmployer());
+		props.navigation.navigate("NameForm");
+	};
+
+	const handleAgent = () => {
+		dispatch(roleAgent());
+		props.navigation.navigate("NameForm");
 	};
 
 	return (
@@ -73,7 +84,7 @@ function Register(props) {
 					</View>
 				</TouchableOpacity>
 
-				<TouchableOpacity activeOpacity={0.9} onPress={handleEmployer}>
+				<TouchableOpacity activeOpacity={0.9} onPress={handleAgent}>
 					<View style={styles.buttoncontainer}>
 						<View style={styles.iconContainer}>
 							<MaterialIcons name='support-agent' size={40} color='white' />
@@ -83,17 +94,19 @@ function Register(props) {
 				</TouchableOpacity>
 			</View>
 
-			<TouchableOpacity
-				activeOpacity={0.9}
-				onPress={handleGoNext}
-				style={styles.stepContainer}>
-				<MaterialIcons
-					name='arrow-forward'
-					size={24}
-					color={color.primary}
-					style={styles.iconWrapper}
-				/>
-			</TouchableOpacity>
+			{false && (
+				<TouchableOpacity
+					activeOpacity={0.9}
+					onPress={handleGoNext}
+					style={styles.stepContainer}>
+					<MaterialIcons
+						name='arrow-forward'
+						size={24}
+						color={color.primary}
+						style={styles.iconWrapper}
+					/>
+				</TouchableOpacity>
+			)}
 		</View>
 	);
 }

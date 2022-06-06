@@ -1,4 +1,4 @@
-import React, {memo} from "react";
+import React, {memo, useState} from "react";
 import {
 	View,
 	Button,
@@ -19,9 +19,55 @@ import {
 	he,
 } from "../../typography";
 import {Ionicons, MaterialIcons} from "@expo/vector-icons";
+import {useDispatch} from "react-redux";
+import {
+	deletePersonal,
+	savePersonal,
+} from "../../../Store/homeScreen/registerSlice";
 
 function GenderForm(props) {
+	// initialing use dispatch
+	const dispatch = useDispatch();
+
 	// going to register
+	const [error, set_error] = useState("");
+	const [male, set_male] = useState(true);
+	const [female, set_female] = useState(false);
+	const [date, set_date] = useState("");
+	const [month, set_month] = useState("");
+	const [year, set_year] = useState("");
+
+	const handleDate = (date) => {
+		if (Number(date) <= 31) {
+			set_date(date);
+			return;
+		}
+	};
+
+	const handleMonth = (month) => {
+		if (Number(month) <= 12) {
+			set_month(month);
+			return;
+		}
+	};
+
+	const handleYear = (year) => {
+		set_year(year);
+		return;
+	};
+
+	const handleMale = () => {
+		set_female(!female);
+		set_male(!male);
+		return;
+	};
+
+	const handleFemale = () => {
+		set_female(!female);
+		set_male(!male);
+		return;
+	};
+
 	const handleGoToRegister = () => {
 		// console.log(props.navigation.navigate("Signup"));
 		// props.navigation.navigate('')
@@ -29,11 +75,43 @@ function GenderForm(props) {
 	};
 
 	const handleGoNext = () => {
-		props.navigation.navigate("LocationForm");
+		if (!date || !month || !year) {
+			set_error("fill all fields in birth date");
+			setTimeout(() => {
+				set_error("");
+			}, 4000);
+
+			return;
+		}
+		if (Number(date) <= 0 || Number(month) <= 0 || Number(year) <= 1960) {
+			set_error("invalid date");
+			setTimeout(() => {
+				set_error("");
+			}, 4000);
+
+			return;
+		}
+		if (date && month && year) {
+			let birthDate =
+				date.padStart(2, "0") + "-" + month.padStart(2, "0") + "-" + year;
+
+			if (male) {
+				dispatch(savePersonal({gender: "male", birthDate}));
+			}
+
+			if (female) {
+				dispatch(savePersonal({gender: "female", birthDate}));
+			}
+
+			props.navigation.navigate("LocationForm");
+			return;
+		}
 	};
 
 	const handleGoPrev = () => {
+		dispatch(deletePersonal());
 		props.navigation.navigate("NameForm");
+		return;
 	};
 
 	return (
@@ -52,41 +130,60 @@ function GenderForm(props) {
 				{/* a place where the user will be allowed to enter his/ her password. */}
 
 				<Caption style={styles.labelText}>Birth date</Caption>
+
+				{!!error && <Caption style={styles.errorText}>{error}</Caption>}
+
 				<View style={styles.dateInputs}>
 					<TextInput
 						placeholder='date'
 						style={styles.inputText}
 						keyboardType='number-pad'
 						maxLength={2}
+						onChangeText={handleDate}
+						value={date}
 					/>
 					<TextInput
 						placeholder='month'
 						style={styles.inputText}
 						keyboardType='number-pad'
 						maxLength={2}
+						onChangeText={handleMonth}
+						value={month}
 					/>
 					<TextInput
 						placeholder='year'
 						style={styles.inputText}
 						keyboardType='number-pad'
 						maxLength={4}
+						onChangeText={handleYear}
+						value={year}
 					/>
 				</View>
-				{/* username input area with a caption at the top. */}
+				{/* Gender radio button. */}
 				<View style={styles.space} />
 				<Caption style={styles.labelText}>Gender</Caption>
-				<View style={styles.dotContainer}>
+
+				{/* for males */}
+				<TouchableOpacity
+					style={styles.dotContainer}
+					activeOpacity={0.8}
+					onPress={handleMale}>
 					<View style={styles.dot}>
-						<View style={styles.innerDot} />
+						{male && <View style={styles.innerDot} />}
 					</View>
 					<Body>Male</Body>
-				</View>
-				<View style={styles.dotContainer}>
+				</TouchableOpacity>
+
+				{/* for females */}
+				<TouchableOpacity
+					style={styles.dotContainer}
+					activeOpacity={0.8}
+					onPress={handleFemale}>
 					<View style={styles.dot}>
-						<View style={styles.innerDot} />
+						{female && <View style={styles.innerDot} />}
 					</View>
 					<Body>Female</Body>
-				</View>
+				</TouchableOpacity>
 			</View>
 			{/* for going next or prev state. */}
 			<View style={styles.stepContainer}>
@@ -142,7 +239,7 @@ const styles = StyleSheet.create({
 		padding: 10,
 		borderWidth: 1,
 		margin: 5,
-		width: 60,
+		width: 70,
 		fontSize: 16,
 		borderRadius: 5,
 	},
@@ -189,6 +286,8 @@ const styles = StyleSheet.create({
 	dotContainer: {
 		flexDirection: "row",
 		marginTop: 10,
+		marginHorizontal: 5,
+		alignItems: "center",
 	},
 	dot: {
 		width: 16,
@@ -213,6 +312,11 @@ const styles = StyleSheet.create({
 	},
 	dateInputs: {
 		flexDirection: "row",
+	},
+	errorText: {
+		color: "red",
+		textTransform: "capitalize",
+		marginLeft: 10,
 	},
 });
 

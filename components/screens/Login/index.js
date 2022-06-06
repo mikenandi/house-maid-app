@@ -72,7 +72,7 @@ function Login(props) {
 			// set_email("");
 			// set_password("");
 
-			console.log(props.navigation);
+			props.navigation.navigate("Home");
 			return;
 		} catch (error) {
 			console.log(error.message);

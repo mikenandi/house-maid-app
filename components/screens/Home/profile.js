@@ -28,7 +28,7 @@ function Profile(props) {
 	const handleLogout = async () => {
 		try {
 			await SecureStore.deleteItemAsync("authToken");
-			props.navigation.navigate("Home");
+
 			return;
 		} catch (error) {
 			return;

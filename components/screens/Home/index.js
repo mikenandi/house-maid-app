@@ -20,8 +20,24 @@ import {
 } from "../../../Store/homeScreen/modalSlice";
 import TopBar from "../TopBar";
 import Post from "../Home/PostJob";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function Home(props) {
+	const [userType, setUserType] = React.useState("");
+
+	React.useEffect(() => {
+		(async () => {
+			try {
+				let user_type = await AsyncStorage.getItem("user_type");
+				setUserType(user_type);
+
+				return;
+			} catch (error) {
+				return;
+			}
+		})();
+	}, []);
+
 	//initializing dispatch
 	const dispatch = useDispatch();
 
@@ -46,13 +62,15 @@ function Home(props) {
 			</View>
 
 			{/* 👋 making person to post an job. */}
-			<TouchableOpacity
-				activeOpacity={0.9}
-				onPress={handlePost}
-				style={styles.buttonContaier}>
-				<AntDesign name='plus' size={20} color='white' />
-				<Body style={styles.floatingText}>Post job</Body>
-			</TouchableOpacity>
+			{userType === "employer" && (
+				<TouchableOpacity
+					activeOpacity={0.9}
+					onPress={handlePost}
+					style={styles.buttonContaier}>
+					<AntDesign name='plus' size={20} color='white' />
+					<Body style={styles.floatingText}>Post job</Body>
+				</TouchableOpacity>
+			)}
 
 			{/* ✋ */}
 			<Modal transparent={false} visible={visible} animationType='fade'>

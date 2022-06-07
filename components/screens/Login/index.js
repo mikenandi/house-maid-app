@@ -66,16 +66,35 @@ function Login(props) {
 			);
 
 			await AsyncStorage.setItem("user_id", response.data.data.user_id);
-			await AsyncStorage.setItem("type", response.data.data.user_role);
+			await AsyncStorage.setItem("user_type", response.data.data.user_role);
 
 			// initializing states.
-			// set_email("");
-			// set_password("");
+			set_email("");
+			set_password("");
 
-			props.navigation.navigate("Home");
+			// props.navigation.navigate("Home");
 			return;
 		} catch (error) {
-			console.log(error.message);
+			if (error.response.data.code === "username_not_found") {
+				set_error(error.response.data.message);
+
+				setTimeout(() => {
+					set_error("");
+				}, 5000);
+
+				return;
+			}
+
+			if (error.response.data.code === "wrong_password") {
+				set_error(error.response.data.message);
+
+				setTimeout(() => {
+					set_error("");
+				}, 5000);
+
+				return;
+			}
+
 			return;
 		}
 	};

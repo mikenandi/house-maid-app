@@ -107,7 +107,7 @@ function PasswordForm(props) {
 				// saving id
 				saveCredentials("user_id", response.data.data.user_id);
 				// saving role
-				saveCredentials("type", response.data.data.role);
+				saveCredentials("user_type", response.data.data.role);
 
 				return;
 			})

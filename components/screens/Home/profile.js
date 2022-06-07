@@ -17,6 +17,7 @@ import {hideProfile} from "../../../Store/homeScreen/modalSlice";
 import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import {loggedOut} from "../../../Store/auth";
 
 function Profile(props) {
 	// initializing dispatch.
@@ -51,6 +52,8 @@ function Profile(props) {
 	const handleLogout = async () => {
 		try {
 			await SecureStore.deleteItemAsync("authToken");
+			dispatch(hideProfile());
+			dispatch(loggedOut());
 
 			return;
 		} catch (error) {

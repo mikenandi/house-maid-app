@@ -21,8 +21,13 @@ import {Ionicons} from "@expo/vector-icons";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useDispatch} from "react-redux";
+import {loggedIn} from "../../../Store/auth";
 
 function Login(props) {
+	// inititializing dispatch
+	const dispatch = useDispatch();
+
 	// initializing states
 	const [error, set_error] = React.useState("");
 	const [email, set_email] = React.useState("");
@@ -72,7 +77,7 @@ function Login(props) {
 			set_email("");
 			set_password("");
 
-			// props.navigation.navigate("Home");
+			dispatch(loggedIn());
 			return;
 		} catch (error) {
 			if (error.response.data.code === "username_not_found") {

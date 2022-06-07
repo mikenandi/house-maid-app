@@ -9,7 +9,7 @@ import {MaterialIcons} from "@expo/vector-icons";
 import {Body, BodyS, HeadingM, HeadingS} from "./components/typography";
 import color from "./components/color";
 import {store} from "./Store";
-import {Provider} from "react-redux";
+import {Provider, useDispatch, useSelector} from "react-redux";
 import {createStackNavigator} from "@react-navigation/stack";
 import Login from "./components/screens/Login";
 import Signup from "./components/screens/Signup";
@@ -20,6 +20,7 @@ import LocationForm from "./components/screens/Signup/locationForm";
 import PasswordForm from "./components/screens/Signup/passwordForm";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import * as SecureStore from "expo-secure-store";
+import {loggedIn} from "./Store/auth";
 
 // initiating screens functions.
 const Stack = createStackNavigator();
@@ -27,50 +28,86 @@ const Tab = createBottomTabNavigator();
 
 // 👇 Handling authentication on the app.
 function MyAuth() {
+	// inititializing dispatch
+	const dispatch = useDispatch();
+
+	const isLoggedOut = useSelector((state) => {
+		return state.auth.isLoggedOut;
+	});
+
+	React.useEffect(() => {
+		(async () => {
+			try {
+				let token = await SecureStore.getItemAsync("authToken");
+
+				if (!!token) {
+					dispatch(loggedIn());
+					return;
+				}
+
+				return;
+			} catch (error) {
+				return;
+			}
+		})();
+	}, []);
+
 	return (
 		<Stack.Navigator initialRouteName='login'>
-			<Stack.Screen
-				name='Login'
-				component={Login}
-				options={{
-					headerShown: false,
-				}}
-			/>
-			<Stack.Screen
-				name='Register'
-				component={Signup}
-				options={{headerShown: false}}
-			/>
-			<Stack.Screen
-				name='NameForm'
-				component={NameForm}
-				options={{headerShown: false}}
-			/>
-			<Stack.Screen
-				name='GenderForm'
-				component={GenderForm}
-				options={{headerShown: false}}
-			/>
-			<Stack.Screen
-				name='ContactsForm'
-				component={ContactsForm}
-				options={{headerShown: false}}
-			/>
-			<Stack.Screen
-				name='LocationForm'
-				component={LocationForm}
-				options={{headerShown: false}}
-			/>
-			<Stack.Screen
-				name='PasswordForm'
-				component={PasswordForm}
-				options={{headerShown: false}}
-			/>
+			{isLoggedOut ? (
+				<>
+					<Stack.Screen
+						name='Login'
+						component={Login}
+						options={{
+							headerShown: false,
+						}}
+					/>
+					<Stack.Screen
+						name='Register'
+						component={Signup}
+						options={{headerShown: false}}
+					/>
+					<Stack.Screen
+						name='NameForm'
+						component={NameForm}
+						options={{headerShown: false}}
+					/>
+					<Stack.Screen
+						name='GenderForm'
+						component={GenderForm}
+						options={{headerShown: false}}
+					/>
+					<Stack.Screen
+						name='ContactsForm'
+						component={ContactsForm}
+						options={{headerShown: false}}
+					/>
+					<Stack.Screen
+						name='LocationForm'
+						component={LocationForm}
+						options={{headerShown: false}}
+					/>
+					<Stack.Screen
+						name='PasswordForm'
+						component={PasswordForm}
+						options={{headerShown: false}}
+					/>
+				</>
+			) : (
+				<>
+					<Stack.Screen
+						name='Root'
+						component={MyTabs}
+						options={{headerShown: false}}
+					/>
+				</>
+			)}
 		</Stack.Navigator>
 	);
 }
 
-// 👇 app contents.
+// 👇 signed screens contents.
 function MyTabs() {
 	return (
 		<Tab.Navigator
@@ -108,28 +145,11 @@ function MyTabs() {
 
 // 👇
 export default function App() {
-	// checking if there is any token saved
-	const [authToken, setAuthToken] = React.useState("");
-
-	const getToken = async () => {
-		try {
-			let token = await SecureStore.getItemAsync("authToken");
-			setAuthToken(token);
-			return;
-		} catch (error) {
-			return;
-		}
-	};
-
-	React.useEffect(() => {
-		getToken();
-	}, []);
-
 	return (
 		<Provider store={store}>
 			<NavigationContainer>
 				<StatusBar backgroundColor='white' />
-				{!!authToken ? <MyTabs /> : <MyAuth />}
+				<MyAuth />
 			</NavigationContainer>
 		</Provider>
 	);

@@ -30,7 +30,6 @@ function Home(props) {
 			try {
 				let user_type = await AsyncStorage.getItem("user_type");
 				setUserType(user_type);
-
 				return;
 			} catch (error) {
 				return;

@@ -23,6 +23,7 @@ import {deletePassword} from "../../../Store/homeScreen/registerSlice";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {loggedIn} from "../../../Store/auth";
 
 function PasswordForm(props) {
 	//initializing
@@ -67,54 +68,56 @@ function PasswordForm(props) {
 		await AsyncStorage.setItem(key, value);
 		return;
 	};
-	const handleRegister = () => {
-		if (password.length < 6) {
-			set_error("Too short password, min 6 characters.");
-			setTimeout(() => {
-				set_error("");
-			}, 5000);
-			return;
-		}
-
-		if (password !== confirm_password) {
-			set_error("Passwords do not match");
-			setTimeout(() => {
-				set_error("");
-			}, 5000);
-			return;
-		}
-
-		axios({
-			method: "POST",
-			url: "http://nuhu-backend.herokuapp.com/api/v1/register",
-			data: {
-				first_name: register.firstName,
-				last_name: register.lastName,
-				email: register.email,
-				password: password,
-				phone_number: register.phoneNumber,
-				gender: register.gender,
-				birthdate: register.birthDate,
-				region: register.location.region,
-				district: register.location.district,
-				ward: register.location.ward,
-				street: register.location.street,
-				role: register.role,
-			},
-		})
-			.then((response) => {
-				saveToken("authToken", response.data.data.auth_token);
-				// saving id
-				saveCredentials("user_id", response.data.data.user_id);
-				// saving role
-				saveCredentials("user_type", response.data.data.role);
-
+	const handleRegister = async () => {
+		try {
+			if (password.length < 6) {
+				set_error("Too short password, min 6 characters.");
+				setTimeout(() => {
+					set_error("");
+				}, 5000);
 				return;
-			})
-			.catch((error) => {
-				set_error(error.response.message);
+			}
+
+			if (password !== confirm_password) {
+				set_error("Passwords do not match");
+				setTimeout(() => {
+					set_error("");
+				}, 5000);
 				return;
+			}
+
+			let response = await axios({
+				method: "POST",
+				url: "http://nuhu-backend.herokuapp.com/api/v1/register",
+				data: {
+					first_name: register.firstName,
+					last_name: register.lastName,
+					email: register.email,
+					password: password,
+					phone_number: register.phoneNumber,
+					gender: register.gender,
+					birthdate: register.birthDate,
+					region: register.location.region,
+					district: register.location.district,
+					ward: register.location.ward,
+					street: register.location.street,
+					role: register.role,
+				},
 			});
+
+			// saving token.
+			saveToken("authToken", response.data.data.auth_token);
+			// saving id
+			saveCredentials("user_id", response.data.data.user_id);
+			// saving role
+			saveCredentials("user_type", response.data.data.role);
+
+			dispatch(loggedIn());
+			return;
+		} catch (error) {
+			set_error(error.response.message);
+			return;
+		}
 	};
 
 	return (

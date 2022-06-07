@@ -26,17 +26,33 @@ import {
 	AntDesign,
 } from "@expo/vector-icons";
 
-import {FontAwesome} from "@expo/vector-icons";
-import {useDispatch} from "react-redux";
+import {FontAwesome5} from "@expo/vector-icons";
+import {useDispatch, useSelector} from "react-redux";
 import {
+	hideDescription,
 	hideGenderPreference,
 	hidePost,
+	hidePostDesc,
+	hidePostModals,
 	hideSalary,
 } from "../../../../Store/homeScreen/modalSlice";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {restorePost} from "../../../../Store/homeScreen/postJobSlice";
 
 function Salary(props) {
 	// initializing dispatch
 	const dispatch = useDispatch();
+
+	const post_data = useSelector((state) => {
+		return state.postJob;
+	});
+
+	const [description, set_description] = useState("");
+
+	const handleDescription = (description) => {
+		set_description(description);
+	};
 
 	// going to register
 	const handleGoToRegister = () => {
@@ -48,9 +64,36 @@ function Salary(props) {
 		dispatch(hideSalary());
 	};
 
-	const handleNext = () => {};
+	const handlePost = async () => {
+		try {
+			let user_id = await AsyncStorage.getItem("user_id");
+
+			let response = await axios({
+				method: "POST",
+				url: "http://nuhu-backend.herokuapp.com/api/v1/post-job",
+				data: {
+					user_id: user_id,
+					service: post_data.service,
+					gender_preference: post_data.gender_preference,
+					job_type: post_data.job_type,
+					salary: post_data.salary,
+					description: description,
+				},
+			});
+
+			dispatch(restorePost());
+
+			dispatch(hidePostModals());
+
+			return;
+		} catch (error) {
+			return;
+		}
+	};
+
 	const handleClose = () => {
 		// dispatch(hidePost());
+		dispatch(hidePostDesc());
 	};
 
 	return (
@@ -62,7 +105,11 @@ function Salary(props) {
 				activeOpacity={0.9}
 				onPress={handleClose}
 				style={styles.crossIcon}>
-				<EvilIcons name='close' size={30} color='black' />
+				<FontAwesome5
+					name='long-arrow-alt-left'
+					size={24}
+					color={color.primary}
+				/>
 			</TouchableOpacity>
 
 			<View style={styles.bodyContainer}>
@@ -72,14 +119,19 @@ function Salary(props) {
 						placeholder='descriptions'
 						style={styles.textInput}
 						multiline={true}
+						value={description}
+						onChangeText={handleDescription}
 					/>
 				</View>
 			</View>
 
 			{/* A buton for login */}
 			<View style={styles.bottomContainer}>
-				<TouchableOpacity style={styles.buttoncontainer}>
-					<ButtonText style={styles.buttonText}>post now</ButtonText>
+				<TouchableOpacity
+					style={styles.buttoncontainer}
+					activeOpacity={0.7}
+					onPress={handlePost}>
+					<ButtonText style={styles.buttonText}>post</ButtonText>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -152,12 +204,13 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	textInput: {
-		padding: 10,
+		padding: 15,
 		borderWidth: 1,
 		fontSize: 16,
 		width: 260,
-		borderRadius: 0,
+		borderRadius: 5,
 		borderColor: "black",
+		backgroundColor: color.lightgray,
 	},
 	inputContainer: {
 		justifyContent: "center",

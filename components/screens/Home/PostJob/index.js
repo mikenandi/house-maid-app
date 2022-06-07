@@ -31,6 +31,13 @@ import {
 	showGenderPreference,
 } from "../../../../Store/homeScreen/modalSlice";
 import GenderPreference from "../PostJob/gender-preference";
+import {
+	deleteService,
+	homeAssistant,
+	homeBabySitter,
+	homeCleaning,
+	homeCooking,
+} from "../../../../Store/homeScreen/postJobSlice";
 
 function PostJob(props) {
 	// initializing dispatch
@@ -44,10 +51,37 @@ function PostJob(props) {
 	const handleGoNext = () => {
 		// 👇 action.
 		dispatch(showGenderPreference());
+		return;
 	};
 
 	const handleClose = () => {
+		dispatch(deleteService());
 		dispatch(hidePost());
+		return;
+	};
+
+	const handleHomeAssistant = () => {
+		dispatch(homeAssistant());
+		dispatch(showGenderPreference());
+		return;
+	};
+
+	const handleHouseCleaning = () => {
+		dispatch(homeCleaning());
+		dispatch(showGenderPreference());
+		return;
+	};
+
+	const handleCooking = () => {
+		dispatch(homeCooking);
+		dispatch(showGenderPreference());
+		return;
+	};
+
+	const handleBabySitter = () => {
+		dispatch(homeBabySitter());
+		dispatch(showGenderPreference());
+		return;
 	};
 
 	return (
@@ -65,7 +99,10 @@ function PostJob(props) {
 			<View style={styles.bodyContainer}>
 				<HeadingM style={styles.titleText}>What service do you need.</HeadingM>
 				<View>
-					<View style={styles.serviceContainer}>
+					<TouchableOpacity
+						style={styles.serviceContainer}
+						activeOpacity={0.8}
+						onPress={handleHomeAssistant}>
 						<View style={styles.iconBox}>
 							<MaterialCommunityIcons
 								name='home-assistant'
@@ -74,15 +111,23 @@ function PostJob(props) {
 							/>
 						</View>
 						<HeadingS>Home assistant</HeadingS>
-					</View>
-					<View style={styles.serviceContainer}>
+					</TouchableOpacity>
+
+					<TouchableOpacity
+						style={styles.serviceContainer}
+						activeOpacity={0.8}
+						onPress={handleHouseCleaning}>
 						<View style={styles.iconBox}>
 							<MaterialIcons name='cleaning-services' size={35} color='white' />
 						</View>
 
-						<HeadingS>House Cleaning</HeadingS>
-					</View>
-					<View style={styles.serviceContainer}>
+						<HeadingS>Home cleaning</HeadingS>
+					</TouchableOpacity>
+
+					<TouchableOpacity
+						style={styles.serviceContainer}
+						activeOpacity={0.8}
+						onPress={handleBabySitter}>
 						<View style={styles.iconBox}>
 							<MaterialCommunityIcons
 								name='human-baby-changing-table'
@@ -91,25 +136,30 @@ function PostJob(props) {
 							/>
 						</View>
 
-						<HeadingS> Baby sitter</HeadingS>
-					</View>
+						<HeadingS>Home Baby sitter</HeadingS>
+					</TouchableOpacity>
 
-					<View style={styles.serviceContainer}>
+					<TouchableOpacity
+						style={styles.serviceContainer}
+						activeOpacity={0.8}
+						onPress={handleCooking}>
 						<View style={styles.iconBox}>
 							<MaterialCommunityIcons name='chef-hat' size={35} color='white' />
 						</View>
-						<HeadingS>Cooking</HeadingS>
-					</View>
+						<HeadingS>Home cooking</HeadingS>
+					</TouchableOpacity>
 				</View>
 			</View>
 
 			{/* A buton for login */}
-			<TouchableOpacity
-				activeOpacity={0.9}
-				onPress={handleGoNext}
-				style={styles.buttoncontainer}>
-				<EvilIcons name='arrow-right' size={45} color='black' />
-			</TouchableOpacity>
+			{false && (
+				<TouchableOpacity
+					activeOpacity={0.9}
+					onPress={handleGoNext}
+					style={styles.buttoncontainer}>
+					<EvilIcons name='arrow-right' size={45} color='black' />
+				</TouchableOpacity>
+			)}
 
 			<Modal transparent={false} animationType='fade' visible={visible}>
 				<GenderPreference />

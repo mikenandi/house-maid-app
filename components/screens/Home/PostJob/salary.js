@@ -27,7 +27,7 @@ import {
 	AntDesign,
 } from "@expo/vector-icons";
 
-import {FontAwesome} from "@expo/vector-icons";
+import {FontAwesome5} from "@expo/vector-icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
 	hideGenderPreference,
@@ -36,10 +36,15 @@ import {
 	showPostDesc,
 } from "../../../../Store/homeScreen/modalSlice";
 import Description from "../PostJob/description";
+import {saveSalary} from "../../../../Store/homeScreen/postJobSlice";
 
 function Salary(props) {
 	// initializing dispatch
 	const dispatch = useDispatch();
+
+	// 👊 initializing states
+	const [error, set_error] = React.useState("");
+	const [salary, set_salary] = React.useState("");
 
 	const visible = useSelector((state) => {
 		return state.modal.postDescVisible;
@@ -51,6 +56,27 @@ function Salary(props) {
 	};
 
 	const handleNext = () => {
+		if (salary.length < 1) {
+			set_error("Please enter salary you offer.");
+
+			setTimeout(() => {
+				set_error("");
+			}, 7000);
+
+			return;
+		}
+
+		if (Number(salary) < 100000) {
+			set_error("salary should be greater than Tsh 100,000");
+
+			setTimeout(() => {
+				set_error("");
+			}, 7000);
+
+			return;
+		}
+
+		dispatch(saveSalary(salary));
 		dispatch(showPostDesc());
 		return;
 	};
@@ -58,35 +84,59 @@ function Salary(props) {
 		// dispatch(hidePost());
 	};
 
+	const handleSalary = (salary) => {
+		set_salary(salary);
+		return;
+	};
+
 	return (
 		<View style={styles.screen}>
 			<StatusBar backgroundColor='white' />
 
 			{/* 👐 close modals */}
-			<TouchableOpacity
-				activeOpacity={0.9}
-				onPress={handleClose}
-				style={styles.crossIcon}>
-				<EvilIcons name='close' size={30} color='black' />
-			</TouchableOpacity>
+			{false && (
+				<TouchableOpacity
+					activeOpacity={0.9}
+					onPress={handleClose}
+					style={styles.crossIcon}>
+					<EvilIcons name='close' size={30} color='black' />
+				</TouchableOpacity>
+			)}
+			<View style={styles.buttoncontainer}>
+				<TouchableOpacity activeOpacity={0.9} onPress={handleBack}>
+					<FontAwesome5
+						name='long-arrow-alt-left'
+						size={24}
+						color={color.primary}
+					/>
+				</TouchableOpacity>
 
+				<TouchableOpacity activeOpacity={0.9} onPress={handleNext}>
+					<FontAwesome5
+						name='long-arrow-alt-right'
+						size={24}
+						color={color.primary}
+					/>
+				</TouchableOpacity>
+			</View>
 			<View style={styles.bodyContainer}>
 				<HeadingM style={styles.titleText}>what salary do you offer.</HeadingM>
+
+				{!!error && <BodyS style={styles.errorText}>{error}</BodyS>}
+
 				<View style={styles.inputContainer}>
-					<TextInput placeholder='amount' style={styles.textInput} />
+					<TextInput
+						placeholder='amount'
+						style={styles.textInput}
+						value={salary}
+						onChangeText={handleSalary}
+						keyboardType='number-pad'
+					/>
 				</View>
 			</View>
 
 			{/* A buton for login */}
-			<View style={styles.buttoncontainer}>
-				<TouchableOpacity activeOpacity={0.9} onPress={handleBack}>
-					<EvilIcons name='arrow-left' size={45} color='black' />
-				</TouchableOpacity>
 
-				<TouchableOpacity activeOpacity={0.9} onPress={handleNext}>
-					<EvilIcons name='arrow-right' size={45} color='black' />
-				</TouchableOpacity>
-			</View>
 			<Modal transparent={false} animationType='fade' visible={visible}>
 				<Description />
 			</Modal>
@@ -165,11 +215,19 @@ const styles = StyleSheet.create({
 		width: 180,
 		borderRadius: 0,
 		marginTop: 10,
+		backgroundColor: color.lightgray,
+		borderRadius: 5,
+		fontFamily: "serif",
 	},
 	inputContainer: {
 		padding: 10,
 		justifyContent: "center",
 		alignItems: "center",
+	},
+	errorText: {
+		color: "red",
+		marginLeft: 5,
+		textTransform: "capitalize",
 	},
 });
 

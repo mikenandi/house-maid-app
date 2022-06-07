@@ -27,7 +27,7 @@ import {
 	AntDesign,
 } from "@expo/vector-icons";
 
-import {FontAwesome} from "@expo/vector-icons";
+import {FontAwesome5} from "@expo/vector-icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
 	hideGenderPreference,
@@ -35,6 +35,11 @@ import {
 	showSalary,
 } from "../../../../Store/homeScreen/modalSlice";
 import Salary from "./salary";
+import {
+	deleteType,
+	fulltimeType,
+	partTimeType,
+} from "../../../../Store/homeScreen/postJobSlice";
 
 function JobType(props) {
 	const visible = useSelector((state) => {
@@ -55,6 +60,21 @@ function JobType(props) {
 	};
 	const handleClose = () => {
 		// dispatch(hidePost());
+		dispatch(deleteType());
+		dispatch(hideJobType());
+		return;
+	};
+
+	const handleFullTime = () => {
+		dispatch(fulltimeType());
+		dispatch(showSalary());
+		return;
+	};
+
+	const handlePartTime = () => {
+		dispatch(partTimeType());
+		dispatch(showSalary());
+		return;
 	};
 
 	return (
@@ -66,13 +86,20 @@ function JobType(props) {
 				activeOpacity={0.9}
 				onPress={handleClose}
 				style={styles.crossIcon}>
-				<EvilIcons name='close' size={30} color='black' />
+				<FontAwesome5
+					name='long-arrow-alt-left'
+					size={24}
+					color={color.primary}
+				/>
 			</TouchableOpacity>
 
 			<View style={styles.bodyContainer}>
 				<HeadingM style={styles.titleText}>What kind job is that.</HeadingM>
 				<View>
-					<View style={styles.serviceContainer}>
+					<TouchableOpacity
+						style={styles.serviceContainer}
+						activeOpacity={0.8}
+						onPress={handlePartTime}>
 						<View style={styles.iconBox}>
 							<MaterialCommunityIcons
 								name='clipboard-clock-outline'
@@ -81,27 +108,33 @@ function JobType(props) {
 							/>
 						</View>
 						<HeadingS>Part time</HeadingS>
-					</View>
-					<View style={styles.serviceContainer}>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={styles.serviceContainer}
+						activeOpacity={0.8}
+						onPress={handleFullTime}>
 						<View style={styles.iconBox}>
 							<AntDesign name='clockcircle' size={35} color='white' />
 						</View>
 
 						<HeadingS>Full time</HeadingS>
-					</View>
+					</TouchableOpacity>
 				</View>
 			</View>
 
 			{/* A buton for login */}
-			<View style={styles.buttoncontainer}>
-				<TouchableOpacity activeOpacity={0.9} onPress={handleBack}>
-					<EvilIcons name='arrow-left' size={45} color='black' />
-				</TouchableOpacity>
+			{false && (
+				<View style={styles.buttoncontainer}>
+					<TouchableOpacity activeOpacity={0.9} onPress={handleBack}>
+						<EvilIcons name='arrow-left' size={45} color='black' />
+					</TouchableOpacity>
 
-				<TouchableOpacity activeOpacity={0.9} onPress={handleNext}>
-					<EvilIcons name='arrow-right' size={45} color='black' />
-				</TouchableOpacity>
-			</View>
+					<TouchableOpacity activeOpacity={0.9} onPress={handleNext}>
+						<EvilIcons name='arrow-right' size={45} color='black' />
+					</TouchableOpacity>
+				</View>
+			)}
+
 			<Modal transparent={false} animationType='fade' visible={visible}>
 				<Salary />
 			</Modal>

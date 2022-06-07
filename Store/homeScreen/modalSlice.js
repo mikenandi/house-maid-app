@@ -70,6 +70,13 @@ export const modalSlice = createSlice({
 		hidePostDesc: (state, actions) => {
 			state.postDescVisible = false;
 		},
+		hidePostModals: (state, actions) => {
+			state.postVisible = false;
+			state.jobTypeVisible = false;
+			state.genderPreferenceVisible = false;
+			state.postDescVisible = false;
+			state.salaryVisible = false;
+		},
 	},
 });
 
@@ -92,6 +99,7 @@ export const {
 	hideSalary,
 	showPostDesc,
 	hidePostDesc,
+	hidePostModals,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

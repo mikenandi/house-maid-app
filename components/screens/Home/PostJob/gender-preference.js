@@ -25,7 +25,7 @@ import {
 	MaterialIcons,
 	Foundation,
 } from "@expo/vector-icons";
-
+import {FontAwesome5} from "@expo/vector-icons";
 import {FontAwesome} from "@expo/vector-icons";
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -34,6 +34,12 @@ import {
 	showJobType,
 } from "..//../../../Store/homeScreen/modalSlice";
 import JobType from "./job-type";
+import {
+	anyGender,
+	deleteGenderPreference,
+	femalePrefence,
+	malePreference,
+} from "../../../../Store/homeScreen/postJobSlice";
 
 function GenderPreference(props) {
 	// 👐 making modal visible
@@ -46,13 +52,36 @@ function GenderPreference(props) {
 
 	const handleBack = () => {
 		dispatch(hideGenderPreference());
+		return;
 	};
 
 	const handleNext = () => {
 		dispatch(showJobType());
+		return;
 	};
 	const handleClose = () => {
 		// dispatch(hidePost());
+		dispatch(deleteGenderPreference());
+		dispatch(hideGenderPreference());
+		return;
+	};
+
+	const handleMalePrefence = () => {
+		dispatch(malePreference());
+		dispatch(showJobType());
+		return;
+	};
+
+	const handleFemalePreference = () => {
+		dispatch(femalePrefence());
+		dispatch(showJobType());
+		return;
+	};
+
+	const handleAnyGender = () => {
+		dispatch(anyGender());
+		dispatch(showJobType());
+		return;
 	};
 
 	return (
@@ -64,45 +93,63 @@ function GenderPreference(props) {
 				activeOpacity={0.9}
 				onPress={handleClose}
 				style={styles.crossIcon}>
-				<EvilIcons name='close' size={30} color='black' />
+				<FontAwesome5
+					name='long-arrow-alt-left'
+					size={24}
+					color={color.primary}
+				/>
 			</TouchableOpacity>
 
 			<View style={styles.bodyContainer}>
 				<HeadingM style={styles.titleText}>which gender you prefer.</HeadingM>
 				<View>
-					<View style={styles.serviceContainer}>
+					<TouchableOpacity
+						style={styles.serviceContainer}
+						activeOpacity={0.8}
+						onPress={handleMalePrefence}>
 						<View style={styles.iconBox}>
 							<FontAwesome name='male' size={35} color='white' />
 						</View>
 						<HeadingS>Male</HeadingS>
-					</View>
-					<View style={styles.serviceContainer}>
+					</TouchableOpacity>
+
+					<TouchableOpacity
+						style={styles.serviceContainer}
+						activeOpacity={0.8}
+						onPress={handleFemalePreference}>
 						<View style={styles.iconBox}>
 							<FontAwesome name='female' size={35} color='white' />
 						</View>
 
 						<HeadingS>Female</HeadingS>
-					</View>
-					<View style={styles.serviceContainer}>
+					</TouchableOpacity>
+
+					<TouchableOpacity
+						style={styles.serviceContainer}
+						activeOpacity={0.8}
+						onPress={handleAnyGender}>
 						<View style={styles.iconBox}>
 							<Foundation name='torsos-male-female' size={35} color='white' />
 						</View>
 
 						<HeadingS>Any gender</HeadingS>
-					</View>
+					</TouchableOpacity>
 				</View>
 			</View>
 
-			{/* A buton for login */}
-			<View style={styles.buttoncontainer}>
-				<TouchableOpacity activeOpacity={0.9} onPress={handleBack}>
-					<EvilIcons name='arrow-left' size={45} color='black' />
-				</TouchableOpacity>
+			{/* A buton for navigation */}
+			{false && (
+				<View style={styles.buttoncontainer}>
+					<TouchableOpacity activeOpacity={0.9} onPress={handleBack}>
+						<EvilIcons name='arrow-left' size={45} color='black' />
+					</TouchableOpacity>
 
-				<TouchableOpacity activeOpacity={0.9} onPress={handleNext}>
-					<EvilIcons name='arrow-right' size={45} color='black' />
-				</TouchableOpacity>
-			</View>
+					<TouchableOpacity activeOpacity={0.9} onPress={handleNext}>
+						<EvilIcons name='arrow-right' size={45} color='black' />
+					</TouchableOpacity>
+				</View>
+			)}
+
 			<Modal transparent={false} animationType='fade' visible={visible}>
 				<JobType />
 			</Modal>

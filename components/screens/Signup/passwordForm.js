@@ -88,8 +88,8 @@ function PasswordForm(props) {
 			method: "POST",
 			url: "http://nuhu-backend.herokuapp.com/api/v1/register",
 			data: {
-				first_name: register.first_name,
-				last_name: register.last_name,
+				first_name: register.firstName,
+				last_name: register.lastName,
 				email: register.email,
 				password: password,
 				phone_number: register.phoneNumber,

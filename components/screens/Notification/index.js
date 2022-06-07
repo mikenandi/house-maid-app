@@ -10,14 +10,16 @@ import color from "../../color";
 import {Body} from "../../typography";
 import {Ionicons} from "@expo/vector-icons";
 import TopBar from "../TopBar";
+import Detail from "../Notification/detail";
 
 function Notification(props) {
 	return (
 		<View style={styles.screen}>
 			<StatusBar backgroundColor='white' />
 			<TopBar />
-			<View>
-				<Body>notifications</Body>
+			<View style={styles.body}>
+				<Body>posted Jobs</Body>
+				<Detail />
 			</View>
 		</View>
 	);
@@ -38,6 +40,10 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		borderRadius: 25,
 		padding: 5,
+	},
+	body: {
+		marginTop: 10,
+		marginHorizontal: 20,
 	},
 });
 

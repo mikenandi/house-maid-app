@@ -10,11 +10,12 @@ import {
 import color from "../../color";
 import {Body, BodyS, HeadingS, ButtonText} from "../../typography";
 import {EvilIcons} from "@expo/vector-icons";
-import {AntDesign} from "@expo/vector-icons";
+import {FontAwesome5} from "@expo/vector-icons";
 import {Ionicons} from "@expo/vector-icons";
 import JobDescription from "./job-description";
 import {useDispatch, useSelector} from "react-redux";
 import {showDescription} from "../../../Store/homeScreen/modalSlice";
+import Card from "../../Card";
 
 function Job(props) {
 	// 👋 using use dispatch.
@@ -32,35 +33,68 @@ function Job(props) {
 	return (
 		<View>
 			<TouchableOpacity activeOpacity={0.9} onPress={handleShowDescription}>
-				<View style={styles.container}>
-					<View style={styles.employerProfileContainer}>
-						<AntDesign name='book' size={20} color='white' />
-					</View>
-					<View style={styles.descriptionContainer}>
-						<View>
-							<HeadingS style={styles.titleText}>House cleaning.</HeadingS>
-							<Body style={styles.locationText}>location of the job</Body>
-							<Body style={styles.salaryText}>salary: 12k /month</Body>
-							<View style={styles.locationContainer}></View>
-							<View style={styles.buttonsContainer}>
-								<View style={styles.buttonContainer}>
-									<ButtonText style={styles.applyText}>apply</ButtonText>
+				<Card style={styles.container}>
+					<View style={styles.rowContainer}>
+						<View style={styles.employerProfileContainer}>
+							<Ionicons name='pricetags-sharp' size={24} color='black' />
+						</View>
+						<View style={styles.descriptionContainer}>
+							<View>
+								<HeadingS style={styles.titleText}>House cleaning.</HeadingS>
+								<View style={styles.row}>
+									<EvilIcons name='location' size={30} color={color.primary} />
+									<Body style={styles.locationText}>location of the job</Body>
+								</View>
+								<View style={styles.row}>
+									<EvilIcons name='archive' size={30} color={color.primary} />
+									<Body style={styles.salaryText}> Any gender </Body>
+								</View>
+								<View style={styles.row}>
+									<EvilIcons name='archive' size={30} color={color.primary} />
+									<Body style={styles.salaryText}> Full time </Body>
+								</View>
+
+								<View style={styles.row}>
+									<EvilIcons
+										name='credit-card'
+										size={30}
+										color={color.primary}
+									/>
+									<Body style={styles.salaryText}> Tsh 1200000 </Body>
+								</View>
+
+								<View style={styles.row}>
+									<EvilIcons
+										name='exclamation'
+										size={30}
+										color={color.primary}
+									/>
+									<Body style={styles.salaryText}> still available </Body>
 								</View>
 							</View>
-						</View>
-						<View>
-							<Ionicons
-								name='ellipsis-vertical-outline'
-								size={24}
-								color='black'
-							/>
+							{false && (
+								<View>
+									<Ionicons
+										name='ellipsis-vertical-outline'
+										size={30}
+										color='black'
+									/>
+								</View>
+							)}
 						</View>
 					</View>
-				</View>
+
+					<View style={styles.actionsContainer}>
+						<View style={styles.hidebutton}>
+							<ButtonText style={styles.hideText}>Hide</ButtonText>
+						</View>
+
+						<View style={styles.buttonContainer}>
+							<ButtonText style={styles.applyText}>apply</ButtonText>
+						</View>
+					</View>
+				</Card>
 			</TouchableOpacity>
-			<Modal animationType='fade' transparent={false} visible={visible}>
-				<JobDescription />
-			</Modal>
 		</View>
 	);
 }
@@ -68,10 +102,10 @@ function Job(props) {
 const styles = StyleSheet.create({
 	container: {
 		marginTop: 5,
-		padding: 10,
-		borderRadius: 5,
-		flexDirection: "row",
-		backgroundColor: color.lightgray,
+		padding: 15,
+		borderRadius: 15,
+
+		backgroundColor: "white",
 	},
 	bubble: {
 		width: 10,
@@ -94,49 +128,74 @@ const styles = StyleSheet.create({
 		marginRight: 10,
 		marginLeft: 5,
 	},
-	locationContainer: {
+	actionsContainer: {
 		flexDirection: "row",
+		Padding: 20,
+		alignItems: "center",
+		justifyContent: "space-around",
+		marginTop: 20,
 	},
 	titleText: {
-		fontWeight: "bold",
+		fontWeight: "normal",
 	},
 	employerProfileContainer: {
-		backgroundColor: "black",
+		backgroundColor: color.lightgray,
 		padding: 10,
 		justifyContent: "center",
 		alignItems: "center",
 		borderRadius: 40,
-		width: 40,
-		height: 40,
+		width: 50,
+		height: 50,
 		marginRight: 10,
 	},
 	salaryText: {
 		color: color.dimblack,
+		marginLeft: 10,
 	},
 	locationText: {
 		color: color.dimblack,
-		textTransform: "capitalize",
+		marginLeft: 10,
 	},
 	buttonContainer: {
 		backgroundColor: color.primary,
 		padding: 10,
-		width: 80,
+		width: 100,
 		justifyContent: "center",
 		alignItems: "center",
 		marginTop: 5,
 		borderRadius: 5,
 	},
+	hidebutton: {
+		backgroundColor: "white",
+		padding: 10,
+		width: 100,
+		justifyContent: "center",
+		alignItems: "center",
+		marginTop: 5,
+		borderRadius: 5,
+		borderColor: color.primary,
+		borderWidth: 1,
+	},
 	applyText: {
 		color: "white",
 	},
-	buttonsContainer: {
-		flexDirection: "row",
+	hideText: {
+		color: color.primary,
 	},
+
 	descriptionContainer: {
 		flexDirection: "row",
 		justifyContent: "space-between",
 		width: "80%",
 		alignItems: "center",
+	},
+	row: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginTop: 15,
+	},
+	rowContainer: {
+		flexDirection: "row",
 	},
 });
 

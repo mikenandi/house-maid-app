@@ -113,8 +113,10 @@ function MyTabs() {
 		<Tab.Navigator
 			initialRouteName='Home'
 			screenOptions={{
-				tabBarActiveTintColor: "black",
+				tabBarActiveTintColor: color.primary,
 				headerShown: false,
+				tabBarActiveBackgroundColor: color.lightgray,
+				tabBarInactiveBackgroundColor: color.lightgray,
 			}}>
 			<Tab.Screen
 				name='Home'

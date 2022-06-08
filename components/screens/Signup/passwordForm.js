@@ -24,6 +24,7 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {loggedIn} from "../../../Store/auth";
+import Loading from "../../Loading";
 
 function PasswordForm(props) {
 	//initializing
@@ -35,7 +36,7 @@ function PasswordForm(props) {
 	});
 
 	// console.log(register);
-
+	const [isloading, set_isloading] = React.useState(false);
 	const [error, set_error] = useState("");
 	const [password, set_password] = useState("");
 	const [confirm_password, set_confirm_password] = useState("");
@@ -86,6 +87,8 @@ function PasswordForm(props) {
 				return;
 			}
 
+			set_isloading(true);
+
 			let response = await axios({
 				method: "POST",
 				url: "http://nuhu-backend.herokuapp.com/api/v1/register",
@@ -113,12 +116,16 @@ function PasswordForm(props) {
 			saveCredentials("user_type", response.data.data.role);
 
 			dispatch(loggedIn());
+
 			return;
 		} catch (error) {
+			set_isloading(false);
 			set_error(error.response.message);
 			return;
 		}
 	};
+
+	if (isloading) return <Loading />;
 
 	return (
 		<View style={styles.screen}>
@@ -215,6 +222,7 @@ const styles = StyleSheet.create({
 		width: 240,
 		fontSize: 16,
 		borderRadius: 5,
+		letterSpacing: 0.5,
 	},
 	labelText: {
 		marginHorizontal: 5,
@@ -227,6 +235,8 @@ const styles = StyleSheet.create({
 		margin: 5,
 		justifyContent: "center",
 		alignItems: "center",
+		borderRadius: 10,
+		marginTop: 15,
 	},
 	loginText: {
 		color: "white",

@@ -23,12 +23,14 @@ import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useDispatch} from "react-redux";
 import {loggedIn} from "../../../Store/auth";
+import Loading from "../../Loading";
 
 function Login(props) {
 	// inititializing dispatch
 	const dispatch = useDispatch();
 
 	// initializing states
+	const [isloading, set_isloading] = React.useState(false);
 	const [error, set_error] = React.useState("");
 	const [email, set_email] = React.useState("");
 	const [password, set_password] = React.useState("");
@@ -55,6 +57,8 @@ function Login(props) {
 
 				return;
 			}
+
+			set_isloading(true);
 
 			let response = await axios({
 				method: "POST",
@@ -83,6 +87,8 @@ function Login(props) {
 			if (error.response.data.code === "username_not_found") {
 				set_error(error.response.data.message);
 
+				set_isloading(false);
+
 				setTimeout(() => {
 					set_error("");
 				}, 5000);
@@ -92,6 +98,8 @@ function Login(props) {
 
 			if (error.response.data.code === "wrong_password") {
 				set_error(error.response.data.message);
+
+				set_isloading(false);
 
 				setTimeout(() => {
 					set_error("");
@@ -109,6 +117,7 @@ function Login(props) {
 		props.navigation.navigate("Register");
 	};
 
+	if (isloading) return <Loading />;
 	return (
 		<View style={styles.screen}>
 			<StatusBar backgroundColor='white' />
@@ -191,6 +200,7 @@ const styles = StyleSheet.create({
 		width: 240,
 		fontSize: 16,
 		borderRadius: 5,
+		letterSpacing: 0.5,
 	},
 	labelText: {
 		marginHorizontal: 5,
@@ -203,6 +213,8 @@ const styles = StyleSheet.create({
 		margin: 5,
 		justifyContent: "center",
 		alignItems: "center",
+		borderRadius: 10,
+		marginTop: 15,
 	},
 	loginText: {
 		color: "white",

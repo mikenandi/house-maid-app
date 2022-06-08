@@ -26,7 +26,7 @@ function Detail(props) {
 	});
 
 	const handleShowDescription = () => {
-		dispatch(showDescription());
+		// dispatch(showDescription());
 	};
 
 	return (

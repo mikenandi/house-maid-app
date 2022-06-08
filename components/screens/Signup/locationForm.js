@@ -187,6 +187,7 @@ const styles = StyleSheet.create({
 		width: 240,
 		fontSize: 16,
 		borderRadius: 5,
+		letterSpacing: 0.5,
 	},
 	labelText: {
 		marginHorizontal: 5,

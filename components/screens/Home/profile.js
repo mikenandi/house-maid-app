@@ -21,6 +21,7 @@ import {loggedOut} from "../../../Store/auth";
 
 function Profile(props) {
 	// initializing dispatch.
+
 	const dispatch = useDispatch();
 	const [profile, setProfile] = React.useState({});
 
@@ -42,6 +43,10 @@ function Profile(props) {
 				return;
 			}
 		})();
+
+		return () => {
+			setProfile({});
+		};
 	}, []);
 
 	// function to change state of the visible property to hide the modal
@@ -52,7 +57,9 @@ function Profile(props) {
 	const handleLogout = async () => {
 		try {
 			await SecureStore.deleteItemAsync("authToken");
+
 			dispatch(hideProfile());
+
 			dispatch(loggedOut());
 
 			return;

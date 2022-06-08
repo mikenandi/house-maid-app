@@ -39,10 +39,13 @@ import {
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {restorePost} from "../../../../Store/homeScreen/postJobSlice";
+import Loading from "../../../Loading";
 
 function Salary(props) {
 	// initializing dispatch
 	const dispatch = useDispatch();
+
+	const [isloading, set_isloading] = React.useState(false);
 
 	const post_data = useSelector((state) => {
 		return state.postJob;
@@ -54,19 +57,11 @@ function Salary(props) {
 		set_description(description);
 	};
 
-	// going to register
-	const handleGoToRegister = () => {
-		// 👇 action.
-		props.navigation.navigate("Register");
-	};
-
-	const handleBack = () => {
-		dispatch(hideSalary());
-	};
-
 	const handlePost = async () => {
 		try {
 			let user_id = await AsyncStorage.getItem("user_id");
+
+			set_isloading(true);
 
 			let response = await axios({
 				method: "POST",
@@ -95,6 +90,8 @@ function Salary(props) {
 		// dispatch(hidePost());
 		dispatch(hidePostDesc());
 	};
+
+	if (isloading) return <Loading />;
 
 	return (
 		<View style={styles.screen}>

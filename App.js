@@ -21,6 +21,7 @@ import PasswordForm from "./components/screens/Signup/passwordForm";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import * as SecureStore from "expo-secure-store";
 import {loggedIn} from "./Store/auth";
+import Loading from "./components/Loading";
 
 // initiating screens functions.
 const Stack = createStackNavigator();
@@ -28,6 +29,9 @@ const Tab = createBottomTabNavigator();
 
 // 👇 Handling authentication on the app.
 function MyAuth() {
+	// setting loading state
+	const [isloading, set_isloading] = React.useState(true);
+
 	// inititializing dispatch
 	const dispatch = useDispatch();
 
@@ -41,9 +45,15 @@ function MyAuth() {
 				let token = await SecureStore.getItemAsync("authToken");
 
 				if (!!token) {
+					set_isloading(false);
+
 					dispatch(loggedIn());
 					return;
 				}
+
+				setTimeout(() => {
+					set_isloading(false);
+				}, 10000);
 
 				return;
 			} catch (error) {
@@ -51,6 +61,8 @@ function MyAuth() {
 			}
 		})();
 	}, []);
+
+	if (isloading) return <Loading />;
 
 	return (
 		<Stack.Navigator initialRouteName='login'>
@@ -113,7 +125,7 @@ function MyTabs() {
 		<Tab.Navigator
 			initialRouteName='Home'
 			screenOptions={{
-				tabBarActiveTintColor: color.primary,
+				tabBarActiveTintColor: "black",
 				headerShown: false,
 				tabBarActiveBackgroundColor: color.lightgray,
 				tabBarInactiveBackgroundColor: color.lightgray,

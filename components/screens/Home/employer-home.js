@@ -7,6 +7,7 @@ import {
 	StatusBar,
 	Image,
 	Modal,
+	FlatList,
 } from "react-native";
 import color from "../../color";
 import {Body, HeadingS} from "../../typography";
@@ -17,6 +18,7 @@ import {showPost} from "../../../Store/homeScreen/modalSlice";
 import TopBar from "../TopBar";
 import Post from "../Home/PostJob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 function AgentHome(props) {
 	//initializing dispatch
@@ -26,8 +28,54 @@ function AgentHome(props) {
 		return state.modal.postVisible;
 	});
 
+	const user_id = useSelector((state) => {
+		return state.auth.userId;
+	});
+
+	const [applications, set_applications] = React.useState([]);
+
 	const handlePost = () => {
 		dispatch(showPost());
+	};
+
+	React.useEffect(() => {
+		(async () => {
+			try {
+				let response = await axios({
+					method: "GET",
+					url: "http://nuhu-backend.herokuapp.com/api/v1/applications",
+					params: {
+						user_id: user_id,
+					},
+				});
+
+				set_applications(response.data.data);
+
+				return;
+			} catch (error) {
+				return;
+			}
+		})();
+
+		return () => {
+			set_applications([]);
+		};
+	}, []);
+
+	const renderItem = ({item}) => {
+		return (
+			<Applicant
+				id={item.id}
+				applicationId={item.application_id}
+				firstName={item.first_name}
+				lastName={item.last_name}
+				region={item.region}
+				ward={item.ward}
+				phoneNumber={item.phone_number}
+				gender={item.gender}
+				age={item.age}
+			/>
+		);
 	};
 
 	return (
@@ -39,7 +87,13 @@ function AgentHome(props) {
 			{/* 👊 body contents. */}
 			<View style={styles.bodyContainer}>
 				<Body>Recent applications.</Body>
-				<Applicant />
+				<FlatList
+					data={applications}
+					keyExtractor={(item) => item.id}
+					renderItem={renderItem}
+					showsVerticalScrollIndicator={false}
+					contentContainerStyle={styles.flatlistContainer}
+				/>
 			</View>
 
 			{/* 👋 making person to post an job. */}
@@ -49,7 +103,7 @@ function AgentHome(props) {
 				onPress={handlePost}
 				style={styles.buttonContaier}>
 				<AntDesign name='plus' size={20} color='white' />
-				<Body style={styles.floatingText}>Post job</Body>
+				{/* <Body style={styles.floatingText}>Post</Body> */}
 			</TouchableOpacity>
 
 			{/* ✋ */}
@@ -70,9 +124,9 @@ const styles = StyleSheet.create({
 		marginHorizontal: 10,
 	},
 	buttonContaier: {
-		backgroundColor: color.primary,
+		backgroundColor: "seagreen",
 		padding: 15,
-		width: 120,
+		width: 60,
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-around",
@@ -84,6 +138,9 @@ const styles = StyleSheet.create({
 	floatingText: {
 		color: "white",
 		fontWeight: "bold",
+	},
+	flatlistContainer: {
+		paddingBottom: 100,
 	},
 });
 

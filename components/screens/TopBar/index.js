@@ -60,18 +60,25 @@ function Home(props) {
 					<TouchableOpacity
 						activeOpacity={0.9}
 						onPress={handleShowNotification}>
-						<EvilIcons name='bell' size={28} color='black' />
+						<EvilIcons
+							name='bell'
+							size={28}
+							color='black'
+							style={styles.iconContainer}
+						/>
 					</TouchableOpacity>
 
 					{/* 👇 A button to show and hide search. */}
-					<TouchableOpacity activeOpacity={0.9} onPress={handleShowSearch}>
-						<EvilIcons
-							name='search'
-							size={28}
-							color='black'
-							style={styles.searchIcon}
-						/>
-					</TouchableOpacity>
+					{false && (
+						<TouchableOpacity activeOpacity={0.9} onPress={handleShowSearch}>
+							<EvilIcons
+								name='search'
+								size={28}
+								color='black'
+								style={styles.searchIcon}
+							/>
+						</TouchableOpacity>
+					)}
 
 					{/* 👇 A image which when pressed will show profile of the user. */}
 					<TouchableOpacity activeOpacity={0.9} onPress={handleShowProfile}>
@@ -145,6 +152,9 @@ const styles = StyleSheet.create({
 		color: color.primary,
 		fontWeight: "bold",
 		marginLeft: 10,
+	},
+	iconContainer: {
+		marginRight: 20,
 	},
 });
 

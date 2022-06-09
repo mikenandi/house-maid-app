@@ -16,62 +16,85 @@ import JobDescription from "./job-description";
 import {useDispatch, useSelector} from "react-redux";
 import {showDescription} from "../../../Store/homeScreen/modalSlice";
 import Card from "../../Card";
+import axios from "axios";
 
 function Applicant(props) {
 	// 👋 using use dispatch.
 	const dispatch = useDispatch();
+	const [visible, set_visible] = React.useState(true);
 
-	// 👇variable for making description visible.
-	const visible = useSelector((state) => {
-		return state.modal.descriptionVisible;
-	});
+	const handleHide = () => {
+		set_visible(false);
+	};
 
-	const handleShowDescription = () => {
-		dispatch(showDescription());
+	const handleInterview = async () => {
+		try {
+			let response = await axios({
+				method: "PUT",
+				url: "http://nuhu-backend.herokuapp.com/api/v1/call-for-interview",
+				data: {
+					application_id: props.applicationId,
+				},
+			});
+
+			set_visible(false);
+			return;
+		} catch (error) {
+			return;
+		}
 	};
 
 	return (
 		<View>
-			<TouchableOpacity activeOpacity={0.9} onPress={handleShowDescription}>
+			{visible && (
 				<Card style={styles.container}>
 					<View style={styles.cardHeader}>
 						<View style={styles.employerProfileContainer}>
 							<FontAwesome5 name='user-tie' size={24} color='black' />
 						</View>
-						<HeadingS style={styles.titleText}>Applicant name.</HeadingS>
+						<HeadingS style={styles.titleText}>
+							{props.firstName} {props.lastName}
+						</HeadingS>
 					</View>
 
 					<View style={styles.row}>
 						<EvilIcons name='location' size={30} color={color.primary} />
-						<Body style={styles.locationText}>applicant location</Body>
+						<Body style={styles.locationText}>
+							{props.region}, {props.ward}
+						</Body>
 					</View>
 
 					<View style={styles.row}>
 						<EvilIcons name='tag' size={30} color={color.primary} />
-						<Body style={styles.salaryText}>078 724 253 2</Body>
+						<Body style={styles.salaryText}>{props.phoneNumber}</Body>
 					</View>
 
 					<View style={styles.row}>
 						<EvilIcons name='sc-instagram' size={30} color={color.primary} />
-						<Body style={styles.salaryText}> gender </Body>
+						<Body style={styles.salaryText}> {props.gender} </Body>
 					</View>
 
 					<View style={styles.row}>
 						<EvilIcons name='sc-instagram' size={30} color={color.primary} />
-						<Body style={styles.salaryText}> Age </Body>
+						<Body style={styles.salaryText}> {props.age} </Body>
 					</View>
 
 					<View style={styles.actionsContainer}>
-						<View style={styles.hidebutton}>
+						<TouchableOpacity
+							style={styles.hidebutton}
+							activeOpacity={0.8}
+							onPress={handleHide}>
 							<ButtonText style={styles.hideText}>Hide</ButtonText>
-						</View>
+						</TouchableOpacity>
 
-						<View style={styles.buttonContainer}>
-							<ButtonText style={styles.applyText}>accept</ButtonText>
-						</View>
+						<TouchableOpacity
+							style={styles.buttonContainer}
+							onPress={handleInterview}>
+							<ButtonText style={styles.applyText}>Interview</ButtonText>
+						</TouchableOpacity>
 					</View>
 				</Card>
-			</TouchableOpacity>
+			)}
 		</View>
 	);
 }
@@ -82,6 +105,7 @@ const styles = StyleSheet.create({
 		padding: 15,
 		borderRadius: 15,
 		backgroundColor: "white",
+		marginBottom: 10,
 	},
 
 	actionsContainer: {
@@ -142,7 +166,7 @@ const styles = StyleSheet.create({
 	row: {
 		flexDirection: "row",
 		alignItems: "center",
-		marginTop: 15,
+		marginTop: 10,
 		marginLeft: 10,
 	},
 	cardHeader: {

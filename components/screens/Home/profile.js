@@ -18,12 +18,14 @@ import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import {loggedOut} from "../../../Store/auth";
+import Loading from "../../Loading";
 
 function Profile(props) {
 	// initializing dispatch.
 
 	const dispatch = useDispatch();
 	const [profile, setProfile] = React.useState({});
+	const [isloading, set_isloading] = React.useState(false);
 
 	React.useEffect(() => {
 		(async () => {
@@ -58,15 +60,20 @@ function Profile(props) {
 		try {
 			await SecureStore.deleteItemAsync("authToken");
 
-			dispatch(hideProfile());
+			set_isloading(true);
 
-			dispatch(loggedOut());
+			setTimeout(() => {
+				dispatch(hideProfile());
+				dispatch(loggedOut());
+			}, 5000);
 
 			return;
 		} catch (error) {
 			return;
 		}
 	};
+
+	if (isloading) return <Loading />;
 
 	return (
 		<View style={styles.container}>

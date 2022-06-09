@@ -51,9 +51,7 @@ function MyAuth() {
 					return;
 				}
 
-				setTimeout(() => {
-					set_isloading(false);
-				}, 10000);
+				set_isloading(false);
 
 				return;
 			} catch (error) {

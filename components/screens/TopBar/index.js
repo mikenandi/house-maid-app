@@ -10,8 +10,7 @@ import {
 } from "react-native";
 import color from "../../color";
 import {Body, HeadingS, HeadingM} from "../../typography";
-import {Entypo, Ionicons} from "@expo/vector-icons";
-import {EvilIcons} from "@expo/vector-icons";
+import {EvilIcons, FontAwesome5} from "@expo/vector-icons";
 import {useDispatch, useSelector} from "react-redux";
 import Search from "../Home/search";
 import Profile from "../Home/profile";
@@ -76,10 +75,13 @@ function Home(props) {
 
 					{/* 👇 A image which when pressed will show profile of the user. */}
 					<TouchableOpacity activeOpacity={0.9} onPress={handleShowProfile}>
-						<Image
-							source={require("../../../assets/person.jpg")}
-							style={styles.profileImage}
-						/>
+						{false && (
+							<Image
+								source={require("../../../assets/person.jpg")}
+								style={styles.profileImage}
+							/>
+						)}
+						<FontAwesome5 name='user-circle' size={28} color={color.primary} />
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -105,13 +107,9 @@ function Home(props) {
 }
 
 const styles = StyleSheet.create({
-	screen: {},
 	bodyContainer: {
 		marginTop: 5,
 		marginHorizontal: 10,
-	},
-	drawerContainer: {
-		marginLeft: 10,
 	},
 	container: {
 		flexDirection: "row",

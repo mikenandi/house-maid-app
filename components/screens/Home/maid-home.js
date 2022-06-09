@@ -21,42 +21,24 @@ import {
 import TopBar from "../TopBar";
 import Post from "../Home/PostJob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {saveUserId} from "../../../Store/auth";
-import EmployerHome from "./employer-home";
-import AgentHome from "./agent-home";
-import MaidHome from "./maid-home";
-import Loading from "../../Loading";
 
-function Home(props) {
-	//initializing dispatch
+function MaidHome(props) {
+	// initializing dispatch.
 	const dispatch = useDispatch();
 
-	const [userType, setUserType] = React.useState("");
+	return (
+		<View style={styles.screen}>
+			<StatusBar backgroundColor='white' />
 
-	React.useEffect(() => {
-		(async () => {
-			try {
-				let user_type = await AsyncStorage.getItem("user_type");
-				let user_id = await AsyncStorage.getItem("user_id");
+			<TopBar />
 
-				dispatch(saveUserId(user_id));
-
-				setUserType(user_type);
-
-				return;
-			} catch (error) {
-				return;
-			}
-		})();
-	}, []);
-
-	if (userType === "employer") return <EmployerHome />;
-
-	if (userType === "agent") return <AgentHome />;
-
-	if (userType === "maid" || userType === "maid-by-agent") return <MaidHome />;
-
-	return <Loading />;
+			{/* 👊 body contents. */}
+			<View style={styles.bodyContainer}>
+				<Body>Recent jobs maids.</Body>
+				<Job />
+			</View>
+		</View>
+	);
 }
 
 const styles = StyleSheet.create({
@@ -86,4 +68,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default memo(Home);
+export default memo(MaidHome);

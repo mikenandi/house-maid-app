@@ -17,7 +17,7 @@ import {
 	Caption,
 	BodyS,
 } from "../../typography";
-import {Ionicons, MaterialIcons} from "@expo/vector-icons";
+import {FontAwesome5} from "@expo/vector-icons";
 import {useDispatch} from "react-redux";
 import {
 	deleteContacts,
@@ -65,11 +65,27 @@ function ContactsForm(props) {
 	return (
 		<View style={styles.screen}>
 			<StatusBar backgroundColor='white' />
+			{/* for going next or prev state. */}
+			<View style={styles.stepContainer}>
+				{/* 👈 Going back. */}
+				<TouchableOpacity activeOpacity={0.9} onPress={handleGoPrev}>
+					<FontAwesome5
+						name='long-arrow-alt-left'
+						size={24}
+						color={color.primary}
+					/>
+				</TouchableOpacity>
 
+				{/* 👉 Going forward */}
+				<TouchableOpacity activeOpacity={0.9} onPress={handleGoNext}>
+					<FontAwesome5
+						name='long-arrow-alt-right'
+						size={24}
+						color={color.primary}
+					/>
+				</TouchableOpacity>
+			</View>
 			<View>
-				{/* logo of the app. */}
-				<HeadingL style={styles.logoText}>Smart Maids</HeadingL>
-
 				{/* title of the activity in the screen. */}
 				<HeadingM style={styles.titleText}>Contacts</HeadingM>
 
@@ -94,28 +110,6 @@ function ContactsForm(props) {
 					value={phone_number}
 				/>
 			</View>
-			{/* for going next or prev state. */}
-			<View style={styles.stepContainer}>
-				{/* 👈 Going back. */}
-				<TouchableOpacity activeOpacity={0.9} onPress={handleGoPrev}>
-					<MaterialIcons
-						name='arrow-back'
-						size={24}
-						color={color.primary}
-						style={styles.iconWrapper}
-					/>
-				</TouchableOpacity>
-
-				{/* 👉 Going forward */}
-				<TouchableOpacity activeOpacity={0.9} onPress={handleGoNext}>
-					<MaterialIcons
-						name='arrow-forward'
-						size={24}
-						color={color.primary}
-						style={styles.iconWrapper}
-					/>
-				</TouchableOpacity>
-			</View>
 		</View>
 	);
 }
@@ -124,7 +118,6 @@ const styles = StyleSheet.create({
 	screen: {
 		flex: 1,
 		backgroundColor: "white",
-		justifyContent: "center",
 		alignItems: "center",
 	},
 	drawerContainer: {

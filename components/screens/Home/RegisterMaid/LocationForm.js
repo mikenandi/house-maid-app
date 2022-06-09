@@ -9,7 +9,7 @@ import {
 	Pressable,
 	ScrollView,
 } from "react-native";
-import color from "../../color";
+import color from "../../../color";
 import {
 	Body,
 	HeadingL,
@@ -17,13 +17,19 @@ import {
 	ButtonText,
 	Caption,
 	BodyS,
-} from "../../typography";
+} from "../../../typography";
 import {FontAwesome5} from "@expo/vector-icons";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
 	deleteLocation,
 	saveLocation,
-} from "../../../Store/homeScreen/registerSlice";
+} from "../../../../Store/homeScreen/registerMaidSlice";
+import {
+	hideAllRegisterMaidModals,
+	hideLocationForm,
+} from "../../../../Store/homeScreen/agentModalSlice";
+import axios from "axios";
+import Loading from "../../../Loading";
 
 function LocationForm(props) {
 	// intializing dispatch
@@ -31,10 +37,18 @@ function LocationForm(props) {
 
 	// states for filling forms
 	const [error, set_error] = useState("");
+	const [isloading, set_isloading] = useState(false);
 	const [region, set_region] = useState("");
 	const [district, set_district] = useState("");
 	const [ward, set_ward] = useState("");
 	const [street, set_street] = useState("");
+	const inputs = useSelector((state) => {
+		return state.registerMaid;
+	});
+
+	const user_id = useSelector((state) => {
+		return state.auth.userId;
+	});
 
 	// functionts to handle inputing values
 	const handleRegion = (region) => {
@@ -56,35 +70,63 @@ function LocationForm(props) {
 		set_street(street);
 		return;
 	};
-	// going to register
-	const handleGoToRegister = () => {
-		// console.log(props.navigation.navigate("Signup"));
-		// props.navigation.navigate('')
-		props.navigation.navigate("Register");
-		return;
-	};
 
 	const handleGoPrev = () => {
 		dispatch(deleteLocation());
-		props.navigation.navigate("GenderForm");
+		dispatch(hideLocationForm());
 		return;
 	};
 
-	const handleGoNext = () => {
-		if (!region || !district || !ward || !street) {
-			set_error("fill all parts before going next step");
+	const handleRegister = async () => {
+		try {
+			if (!region || !district || !ward || !street) {
+				set_error("fill all fields before registering");
+				setTimeout(() => {
+					set_error("");
+				}, 4000);
+				return;
+			}
+
+			dispatch(saveLocation({region, district, ward, street}));
+
+			set_isloading(true);
+
+			let response = await axios({
+				method: "POST",
+				url: "http://nuhu-backend.herokuapp.com/api/v1/register-maid",
+				params: {user_id: user_id},
+				data: {
+					first_name: inputs.firstName,
+					last_name: inputs.lastName,
+					gender: inputs.gender,
+					email: inputs.email,
+					birthdate: inputs.birthDate,
+					phone_number: inputs.phoneNumber,
+					region: region,
+					district: district,
+					ward: ward,
+					street: street,
+				},
+			});
+
+			dispatch(hideAllRegisterMaidModals());
+
+			return;
+		} catch (error) {
+			set_error(error.response.data.message);
+			set_isloading(false);
 			setTimeout(() => {
 				set_error("");
-			}, 4000);
+			}, 7000);
+
 			return;
 		}
-		dispatch(saveLocation({region, district, ward, street}));
-		props.navigation.navigate("ContactsForm");
-		return;
 	};
 
+	if (isloading) return <Loading />;
+
 	return (
-		<ScrollView style={styles.scrollContainer}>
+		<ScrollView>
 			<View style={styles.screen}>
 				<StatusBar backgroundColor='white' />
 				{/* for going next or prev state. */}
@@ -97,23 +139,14 @@ function LocationForm(props) {
 							color={color.primary}
 						/>
 					</TouchableOpacity>
-
-					{/* 👉 Going forward */}
-					<TouchableOpacity activeOpacity={0.9} onPress={handleGoNext}>
-						<FontAwesome5
-							name='long-arrow-alt-right'
-							size={24}
-							color={color.primary}
-						/>
-					</TouchableOpacity>
 				</View>
 				<View>
 					{/* title of the activity in the screen. */}
+
 					<HeadingM style={styles.titleText}>Location</HeadingM>
 
 					{/* username input area with a caption at the top. */}
 					{!!error && <Caption style={styles.errorText}>{error}</Caption>}
-
 					<Caption style={styles.labelText}>Region</Caption>
 					<TextInput
 						placeholder='Region'
@@ -147,15 +180,18 @@ function LocationForm(props) {
 						value={street}
 					/>
 				</View>
+				<TouchableOpacity
+					style={styles.buttoncontainer}
+					activeOpacity={0.8}
+					onPress={handleRegister}>
+					<ButtonText style={styles.buttonText}>register maid</ButtonText>
+				</TouchableOpacity>
 			</View>
 		</ScrollView>
 	);
 }
 
 const styles = StyleSheet.create({
-	scrollContainer: {
-		backgroundColor: "white",
-	},
 	screen: {
 		flex: 1,
 		backgroundColor: "white",
@@ -181,11 +217,9 @@ const styles = StyleSheet.create({
 		margin: 5,
 		justifyContent: "center",
 		alignItems: "center",
+		borderRadius: 10,
 	},
-	loginText: {
-		color: "white",
-		fontWeight: "bold",
-	},
+
 	descText: {
 		color: color.dimblack,
 		marginLeft: 5,
@@ -206,15 +240,16 @@ const styles = StyleSheet.create({
 		marginTop: 20,
 		flexDirection: "row",
 	},
-	iconWrapper: {
-		backgroundColor: color.lightgray,
-		padding: 10,
-		borderRadius: 20,
-	},
+
 	errorText: {
 		color: "red",
 		marginLeft: 5,
+		fontWeight: "bold",
 		textTransform: "capitalize",
+	},
+	buttonText: {
+		color: "white",
+		fontWeight: "bold",
 	},
 });
 

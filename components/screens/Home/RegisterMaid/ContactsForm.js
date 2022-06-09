@@ -1,4 +1,4 @@
-import React, {memo, useState} from "react";
+import React, {memo, useEffect} from "react";
 import {
 	View,
 	Button,
@@ -7,8 +7,9 @@ import {
 	StatusBar,
 	TextInput,
 	Pressable,
+	Modal,
 } from "react-native";
-import color from "../../color";
+import color from "../../../color";
 import {
 	Body,
 	HeadingL,
@@ -16,70 +17,80 @@ import {
 	ButtonText,
 	Caption,
 	BodyS,
-	he,
-} from "../../typography";
+} from "../../../typography";
 import {FontAwesome5} from "@expo/vector-icons";
-import {useDispatch} from "react-redux";
-import {deleteName, saveName} from "../../../Store/homeScreen/registerSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {
+	deleteContacts,
+	saveContacts,
+} from "../../../../Store/homeScreen/registerMaidSlice";
+import {
+	hideContactsForm,
+	showLocationForm,
+} from "../../../../Store/homeScreen/agentModalSlice";
+import LocationForm from "./LocationForm";
 
-function NameForm(props) {
-	// setting states
-	const [error, set_error] = useState("");
-	const [first_name, set_first_name] = useState("");
-	const [last_name, set_last_name] = useState("");
-
-	// initating dispatch
+function ContactsForm(props) {
+	// initializing dispatch
 	const dispatch = useDispatch();
 
-	// going to register
-	const handleGoToRegister = () => {
-		// props.navigation.navigate('')
-		props.navigation.navigate("Register");
+	// intilizing states
+	const [error, set_error] = React.useState("");
+	const [email, set_email] = React.useState("");
+	const [phone_number, set_phone_number] = React.useState("");
+	const visible = useSelector((state) => {
+		return state.agentModal.locationForm;
+	});
+
+	const handleEmail = (email) => {
+		set_email(email);
+		return;
+	};
+
+	const handlePhoneNumber = (phone_number) => {
+		set_phone_number(phone_number);
+		return;
+	};
+
+	const handleGoPrev = () => {
+		dispatch(deleteContacts());
+		dispatch(hideContactsForm());
+		return;
 	};
 
 	const handleGoNext = () => {
-		if (!first_name || !last_name) {
-			set_error("fill all fields");
-
+		if (!email && !phone_number) {
+			set_error("fill all fields before going next step.");
 			setTimeout(() => {
 				set_error("");
 			}, 5000);
 			return;
 		}
 
-		dispatch(saveName({first_name, last_name}));
-		props.navigation.navigate("GenderForm");
+		dispatch(saveContacts({email, phone_number}));
+		dispatch(showLocationForm());
 		return;
 	};
 
-	const handleGoPrev = () => {
-		dispatch(deleteName());
-		props.navigation.navigate("Register");
-	};
-
-	const handleFirstName = (first_name) => {
-		set_first_name(first_name);
-	};
-
-	const handleLastName = (last_name) => {
-		set_last_name(last_name);
-	};
+	useEffect(() => {
+		return () => {};
+	}, []);
 
 	return (
 		<View style={styles.screen}>
 			<StatusBar backgroundColor='white' />
 			{/* for going next or prev state. */}
 			<View style={styles.stepContainer}>
-				{/* 🔚 Going back. */}
+				{/* 👈 Going back. */}
 				<TouchableOpacity activeOpacity={0.9} onPress={handleGoPrev}>
 					<FontAwesome5
 						name='long-arrow-alt-left'
 						size={24}
 						color={color.primary}
 					/>
-
-					{/* 👉 Going forward */}
 				</TouchableOpacity>
+
+				{/* 👉 Going forward */}
 				<TouchableOpacity activeOpacity={0.9} onPress={handleGoNext}>
 					<FontAwesome5
 						name='long-arrow-alt-right'
@@ -88,30 +99,36 @@ function NameForm(props) {
 					/>
 				</TouchableOpacity>
 			</View>
+
 			<View>
 				{/* title of the activity in the screen. */}
-				<HeadingM style={styles.titleText}>Names</HeadingM>
+				<HeadingM style={styles.titleText}>Contacts</HeadingM>
 
 				{/* username input area with a caption at the top. */}
 				{!!error && <Caption style={styles.errorText}>{error}</Caption>}
 
-				<Caption style={styles.labelText}>First Name</Caption>
+				<Caption style={styles.labelText}>Email</Caption>
 				<TextInput
-					placeholder='First name'
+					placeholder='email'
 					style={styles.inputText}
-					onChangeText={handleFirstName}
-					value={first_name}
+					onChangeText={handleEmail}
+					value={email}
 				/>
 
 				{/* a place where the user will be allowed to enter his/ her password. */}
-				<Caption style={styles.labelText}>Last Name</Caption>
+				<Caption style={styles.labelText}>Phone Number</Caption>
 				<TextInput
-					placeholder='Last name'
+					placeholder='Phone number'
 					style={styles.inputText}
-					onChangeText={handleLastName}
-					value={last_name}
+					keyboardType='number-pad'
+					onChangeText={handlePhoneNumber}
+					value={phone_number}
 				/>
 			</View>
+
+			<Modal animationType='fade' transparent={false} visible={visible}>
+				<LocationForm />
+			</Modal>
 		</View>
 	);
 }
@@ -150,7 +167,7 @@ const styles = StyleSheet.create({
 	},
 	labelText: {
 		marginHorizontal: 5,
-		marginTop: 10,
+		marginTop: 5,
 	},
 	buttoncontainer: {
 		backgroundColor: color.primary,
@@ -193,8 +210,7 @@ const styles = StyleSheet.create({
 		color: "red",
 		marginLeft: 10,
 		textTransform: "capitalize",
-		fontWeight: "700",
 	},
 });
 
-export default memo(NameForm);
+export default memo(ContactsForm);

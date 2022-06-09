@@ -17,7 +17,7 @@ import {
 	Caption,
 	BodyS,
 } from "../../typography";
-import {MaterialIcons} from "@expo/vector-icons";
+import {MaterialIcons, FontAwesome5} from "@expo/vector-icons";
 import {useDispatch, useSelector} from "react-redux";
 import {deletePassword} from "../../../Store/homeScreen/registerSlice";
 import axios from "axios";
@@ -53,8 +53,6 @@ function PasswordForm(props) {
 
 	// going to register
 	const handleGoPrev = () => {
-		// console.log(props.navigation.navigate("Signup"));
-		// props.navigation.navigate('')
 		dispatch(deletePassword());
 		props.navigation.navigate("ContactsForm");
 		return;
@@ -130,11 +128,18 @@ function PasswordForm(props) {
 	return (
 		<View style={styles.screen}>
 			<StatusBar backgroundColor='white' />
-
+			{/* for going next or prev state. */}
+			<View style={styles.stepContainer}>
+				{/* 👈 Going back. */}
+				<TouchableOpacity activeOpacity={0.9} onPress={handleGoPrev}>
+					<FontAwesome5
+						name='long-arrow-alt-left'
+						size={24}
+						color={color.primary}
+					/>
+				</TouchableOpacity>
+			</View>
 			<View>
-				{/* logo of the app. */}
-				<HeadingL style={styles.logoText}>Smart Maids</HeadingL>
-
 				{/* title of the activity in the screen. */}
 				<HeadingM style={styles.titleText}>Password</HeadingM>
 
@@ -195,7 +200,6 @@ const styles = StyleSheet.create({
 	screen: {
 		flex: 1,
 		backgroundColor: "white",
-		justifyContent: "center",
 		alignItems: "center",
 	},
 	drawerContainer: {

@@ -7,8 +7,9 @@ import {
 	StatusBar,
 	TextInput,
 	Pressable,
+	Modal,
 } from "react-native";
-import color from "../../color";
+import color from "../../../color";
 import {
 	Body,
 	HeadingL,
@@ -16,26 +17,32 @@ import {
 	ButtonText,
 	Caption,
 	BodyS,
-	he,
-} from "../../typography";
+} from "../../../typography";
 import {FontAwesome5} from "@expo/vector-icons";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
-	deletePersonal,
-	savePersonal,
-} from "../../../Store/homeScreen/registerSlice";
+	deleteBirthDate,
+	saveBirdthDate,
+} from "../../../../Store/homeScreen/registerMaidSlice";
+import {
+	hideBirthDateForm,
+	showContactForm,
+	showLocationForm,
+} from "../../../../Store/homeScreen/agentModalSlice";
+import ContactsForm from "./ContactsForm";
 
-function GenderForm(props) {
+function BirthDateForm(props) {
 	// initialing use dispatch
 	const dispatch = useDispatch();
 
 	// going to register
 	const [error, set_error] = useState("");
-	const [male, set_male] = useState(true);
-	const [female, set_female] = useState(false);
 	const [date, set_date] = useState("");
 	const [month, set_month] = useState("");
 	const [year, set_year] = useState("");
+	const visible = useSelector((state) => {
+		return state.agentModal.contactsForm;
+	});
 
 	const handleDate = (date) => {
 		if (Number(date) <= 31) {
@@ -54,24 +61,6 @@ function GenderForm(props) {
 	const handleYear = (year) => {
 		set_year(year);
 		return;
-	};
-
-	const handleMale = () => {
-		set_female(!female);
-		set_male(!male);
-		return;
-	};
-
-	const handleFemale = () => {
-		set_female(!female);
-		set_male(!male);
-		return;
-	};
-
-	const handleGoToRegister = () => {
-		// console.log(props.navigation.navigate("Signup"));
-		// props.navigation.navigate('')
-		props.navigation.navigate("Register");
 	};
 
 	const handleGoNext = () => {
@@ -95,22 +84,17 @@ function GenderForm(props) {
 			let birthDate =
 				date.padStart(2, "0") + "-" + month.padStart(2, "0") + "-" + year;
 
-			if (male) {
-				dispatch(savePersonal({gender: "male", birthDate}));
-			}
+			dispatch(saveBirdthDate(birthDate));
+			dispatch(showContactForm());
 
-			if (female) {
-				dispatch(savePersonal({gender: "female", birthDate}));
-			}
-
-			props.navigation.navigate("LocationForm");
 			return;
 		}
 	};
 
 	const handleGoPrev = () => {
-		dispatch(deletePersonal());
-		props.navigation.navigate("NameForm");
+		dispatch(deleteBirthDate());
+		dispatch(hideBirthDateForm());
+
 		return;
 	};
 
@@ -138,14 +122,8 @@ function GenderForm(props) {
 				</TouchableOpacity>
 			</View>
 			<View>
-				{/* logo of the app. */}
-
 				{/* title of the activity in the screen. */}
-				<HeadingM style={styles.titleText}>Birthday and gender</HeadingM>
-
-				{/* <TextInput placeholder='First name' style={styles.inputText} /> */}
-
-				{/* a place where the user will be allowed to enter his/ her password. */}
+				<HeadingM style={styles.titleText}>Birth Date</HeadingM>
 
 				<Caption style={styles.labelText}>Birth date</Caption>
 
@@ -177,32 +155,11 @@ function GenderForm(props) {
 						value={year}
 					/>
 				</View>
-				{/* Gender radio button. */}
-				<View style={styles.space} />
-				<Caption style={styles.labelText}>Gender</Caption>
-
-				{/* for males */}
-				<TouchableOpacity
-					style={styles.dotContainer}
-					activeOpacity={0.8}
-					onPress={handleMale}>
-					<View style={styles.dot}>
-						{male && <View style={styles.innerDot} />}
-					</View>
-					<Body>Male</Body>
-				</TouchableOpacity>
-
-				{/* for females */}
-				<TouchableOpacity
-					style={styles.dotContainer}
-					activeOpacity={0.8}
-					onPress={handleFemale}>
-					<View style={styles.dot}>
-						{female && <View style={styles.innerDot} />}
-					</View>
-					<Body>Female</Body>
-				</TouchableOpacity>
 			</View>
+
+			<Modal transparent={false} animationType='fade' visible={visible}>
+				<ContactsForm />
+			</Modal>
 		</View>
 	);
 }
@@ -313,7 +270,8 @@ const styles = StyleSheet.create({
 		color: "red",
 		textTransform: "capitalize",
 		marginLeft: 10,
+		fontWeight: "bold",
 	},
 });
 
-export default memo(GenderForm);
+export default memo(BirthDateForm);

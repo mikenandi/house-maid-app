@@ -17,7 +17,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {showDescription} from "../../../Store/homeScreen/modalSlice";
 import Card from "../../Card";
 
-function Job(props) {
+function Applicant(props) {
 	// 👋 using use dispatch.
 	const dispatch = useDispatch();
 
@@ -35,32 +35,30 @@ function Job(props) {
 			<TouchableOpacity activeOpacity={0.9} onPress={handleShowDescription}>
 				<Card style={styles.container}>
 					<View style={styles.cardHeader}>
-						<View style={styles.avatar}>
-							<Ionicons name='pricetags-sharp' size={24} color='black' />
+						<View style={styles.employerProfileContainer}>
+							<FontAwesome5 name='user-tie' size={24} color='black' />
 						</View>
-						<HeadingS style={styles.titleText}>House cleaning.</HeadingS>
+						<HeadingS style={styles.titleText}>Applicant name.</HeadingS>
 					</View>
+
 					<View style={styles.row}>
 						<EvilIcons name='location' size={30} color={color.primary} />
-						<Body style={styles.locationText}>location of the job</Body>
-					</View>
-					<View style={styles.row}>
-						<EvilIcons name='archive' size={30} color={color.primary} />
-						<Body style={styles.salaryText}> Any gender </Body>
-					</View>
-					<View style={styles.row}>
-						<EvilIcons name='archive' size={30} color={color.primary} />
-						<Body style={styles.salaryText}> Full time </Body>
+						<Body style={styles.locationText}>applicant location</Body>
 					</View>
 
 					<View style={styles.row}>
-						<EvilIcons name='credit-card' size={30} color={color.primary} />
-						<Body style={styles.salaryText}> Tsh 1200000 </Body>
+						<EvilIcons name='tag' size={30} color={color.primary} />
+						<Body style={styles.salaryText}>078 724 253 2</Body>
 					</View>
 
 					<View style={styles.row}>
-						<EvilIcons name='exclamation' size={30} color={color.primary} />
-						<Body style={styles.salaryText}> still available </Body>
+						<EvilIcons name='sc-instagram' size={30} color={color.primary} />
+						<Body style={styles.salaryText}> gender </Body>
+					</View>
+
+					<View style={styles.row}>
+						<EvilIcons name='sc-instagram' size={30} color={color.primary} />
+						<Body style={styles.salaryText}> Age </Body>
 					</View>
 
 					<View style={styles.actionsContainer}>
@@ -69,7 +67,7 @@ function Job(props) {
 						</View>
 
 						<View style={styles.buttonContainer}>
-							<ButtonText style={styles.applyText}>apply</ButtonText>
+							<ButtonText style={styles.applyText}>accept</ButtonText>
 						</View>
 					</View>
 				</Card>
@@ -96,7 +94,7 @@ const styles = StyleSheet.create({
 	titleText: {
 		fontWeight: "normal",
 	},
-	avatar: {
+	employerProfileContainer: {
 		backgroundColor: color.lightgray,
 		padding: 10,
 		justifyContent: "center",
@@ -105,7 +103,6 @@ const styles = StyleSheet.create({
 		width: 50,
 		height: 50,
 		marginRight: 10,
-		flexDirection: "row",
 	},
 	salaryText: {
 		color: color.dimblack,
@@ -141,11 +138,12 @@ const styles = StyleSheet.create({
 	hideText: {
 		color: color.primary,
 	},
+
 	row: {
 		flexDirection: "row",
 		alignItems: "center",
 		marginTop: 15,
-		marginLeft: 25,
+		marginLeft: 10,
 	},
 	cardHeader: {
 		flexDirection: "row",
@@ -153,4 +151,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default memo(Job);
+export default memo(Applicant);

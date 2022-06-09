@@ -7,8 +7,9 @@ import {
 	StatusBar,
 	TextInput,
 	Pressable,
+	Modal,
 } from "react-native";
-import color from "../../color";
+import color from "../../../color";
 import {
 	Body,
 	HeadingL,
@@ -16,26 +17,30 @@ import {
 	ButtonText,
 	Caption,
 	BodyS,
-	he,
-} from "../../typography";
-import {FontAwesome5} from "@expo/vector-icons";
-import {useDispatch} from "react-redux";
-import {deleteName, saveName} from "../../../Store/homeScreen/registerSlice";
+} from "../../../typography";
+import {Ionicons, MaterialIcons, FontAwesome5} from "@expo/vector-icons";
+import {useDispatch, useSelector} from "react-redux";
+import {
+	deleteName,
+	saveName,
+} from "../../../../Store/homeScreen/registerMaidSlice";
+import {
+	hideNameForm,
+	showBirthDateForm,
+} from "../../../../Store/homeScreen/agentModalSlice";
+import BirthDateForm from "./BirthDateForm";
 
 function NameForm(props) {
 	// setting states
 	const [error, set_error] = useState("");
 	const [first_name, set_first_name] = useState("");
 	const [last_name, set_last_name] = useState("");
+	const visible = useSelector((state) => {
+		return state.agentModal.birthdateForm;
+	});
 
 	// initating dispatch
 	const dispatch = useDispatch();
-
-	// going to register
-	const handleGoToRegister = () => {
-		// props.navigation.navigate('')
-		props.navigation.navigate("Register");
-	};
 
 	const handleGoNext = () => {
 		if (!first_name || !last_name) {
@@ -48,13 +53,13 @@ function NameForm(props) {
 		}
 
 		dispatch(saveName({first_name, last_name}));
-		props.navigation.navigate("GenderForm");
+		dispatch(showBirthDateForm());
 		return;
 	};
 
 	const handleGoPrev = () => {
 		dispatch(deleteName());
-		props.navigation.navigate("Register");
+		dispatch(hideNameForm());
 	};
 
 	const handleFirstName = (first_name) => {
@@ -68,7 +73,6 @@ function NameForm(props) {
 	return (
 		<View style={styles.screen}>
 			<StatusBar backgroundColor='white' />
-			{/* for going next or prev state. */}
 			<View style={styles.stepContainer}>
 				{/* 🔚 Going back. */}
 				<TouchableOpacity activeOpacity={0.9} onPress={handleGoPrev}>
@@ -77,9 +81,8 @@ function NameForm(props) {
 						size={24}
 						color={color.primary}
 					/>
-
-					{/* 👉 Going forward */}
 				</TouchableOpacity>
+				{/* 👉 Going forward */}
 				<TouchableOpacity activeOpacity={0.9} onPress={handleGoNext}>
 					<FontAwesome5
 						name='long-arrow-alt-right'
@@ -92,7 +95,6 @@ function NameForm(props) {
 				{/* title of the activity in the screen. */}
 				<HeadingM style={styles.titleText}>Names</HeadingM>
 
-				{/* username input area with a caption at the top. */}
 				{!!error && <Caption style={styles.errorText}>{error}</Caption>}
 
 				<Caption style={styles.labelText}>First Name</Caption>
@@ -103,7 +105,6 @@ function NameForm(props) {
 					value={first_name}
 				/>
 
-				{/* a place where the user will be allowed to enter his/ her password. */}
 				<Caption style={styles.labelText}>Last Name</Caption>
 				<TextInput
 					placeholder='Last name'
@@ -112,6 +113,9 @@ function NameForm(props) {
 					value={last_name}
 				/>
 			</View>
+			<Modal visible={visible} transparent={false} animationType='fade'>
+				<BirthDateForm />
+			</Modal>
 		</View>
 	);
 }
@@ -191,9 +195,9 @@ const styles = StyleSheet.create({
 	},
 	errorText: {
 		color: "red",
-		marginLeft: 10,
 		textTransform: "capitalize",
-		fontWeight: "700",
+		marginLeft: 10,
+		fontWeight: "bold",
 	},
 });
 

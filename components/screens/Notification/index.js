@@ -6,23 +6,35 @@ import {
 	TouchableOpacity,
 	StatusBar,
 } from "react-native";
-import color from "../../color";
-import {Body} from "../../typography";
-import {Ionicons} from "@expo/vector-icons";
-import TopBar from "../TopBar";
-import Detail from "../Notification/detail";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import MaidStatus from "./maid";
+import EmployerStatus from "./employer-status";
+import AgentAnimation from "./agent-animation";
 
 function Notification(props) {
-	return (
-		<View style={styles.screen}>
-			<StatusBar backgroundColor='white' />
-			<TopBar />
-			<View style={styles.body}>
-				<Body>posted Jobs</Body>
-				<Detail />
-			</View>
-		</View>
-	);
+	const [userType, setUserType] = React.useState("");
+
+	React.useEffect(() => {
+		(async () => {
+			try {
+				let user_type = await AsyncStorage.getItem("user_type");
+				let user_id = await AsyncStorage.getItem("user_id");
+
+				setUserType(user_type);
+
+				return;
+			} catch (error) {
+				return;
+			}
+		})();
+	}, []);
+
+	if (userType === "employer") return <EmployerStatus />;
+
+	if (userType === "maid" || userType === "maid-by-agent")
+		return <MaidStatus />;
+
+	return <AgentAnimation />;
 }
 
 const styles = StyleSheet.create({

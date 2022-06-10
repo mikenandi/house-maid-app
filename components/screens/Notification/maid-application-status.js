@@ -12,7 +12,6 @@ import {Body, BodyS, HeadingS, ButtonText} from "../../typography";
 import {EvilIcons} from "@expo/vector-icons";
 import {FontAwesome5} from "@expo/vector-icons";
 import {Ionicons} from "@expo/vector-icons";
-import JobDescription from "./job-description";
 import {useDispatch, useSelector} from "react-redux";
 import Card from "../../Card";
 import axios from "axios";
@@ -85,22 +84,23 @@ function Job(props) {
 						<EvilIcons name='exclamation' size={30} color={color.primary} />
 						<Body style={styles.salaryText}>{props.status} </Body>
 					</View>
+					{false && (
+						<View style={styles.actionsContainer}>
+							<TouchableOpacity
+								style={styles.hidebutton}
+								activeOpacity={0.8}
+								onPress={handleHide}>
+								<ButtonText style={styles.hideText}>Hide</ButtonText>
+							</TouchableOpacity>
 
-					<View style={styles.actionsContainer}>
-						<TouchableOpacity
-							style={styles.hidebutton}
-							activeOpacity={0.8}
-							onPress={handleHide}>
-							<ButtonText style={styles.hideText}>Hide</ButtonText>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							style={styles.buttonContainer}
-							activeOpacity={0.8}
-							onPress={handleApply}>
-							<ButtonText style={styles.applyText}>apply</ButtonText>
-						</TouchableOpacity>
-					</View>
+							<TouchableOpacity
+								style={styles.buttonContainer}
+								activeOpacity={0.8}
+								onPress={handleApply}>
+								<ButtonText style={styles.applyText}>apply</ButtonText>
+							</TouchableOpacity>
+						</View>
+					)}
 				</Card>
 			)}
 		</View>

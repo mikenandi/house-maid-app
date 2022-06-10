@@ -11,42 +11,32 @@ import color from "../../color";
 import {Body, BodyS, HeadingS, ButtonText} from "../../typography";
 import {EvilIcons} from "@expo/vector-icons";
 import {FontAwesome5} from "@expo/vector-icons";
-import {Ionicons} from "@expo/vector-icons";
-import JobDescription from "./job-description";
 import {useDispatch, useSelector} from "react-redux";
 import Card from "../../Card";
 import axios from "axios";
 
-function Job(props) {
+function Applicant(props) {
 	// 👋 using use dispatch.
 	const dispatch = useDispatch();
-
 	const [visible, set_visible] = React.useState(true);
-
-	const user_id = useSelector((state) => {
-		return state.auth.userId;
-	});
 
 	const handleHide = () => {
 		set_visible(false);
 	};
 
-	const handleApply = async () => {
+	const handleInterview = async () => {
 		try {
 			let response = await axios({
-				method: "POST",
-				url: "http://nuhu-backend.herokuapp.com/api/v1/apply-job",
+				method: "PUT",
+				url: "http://nuhu-backend.herokuapp.com/api/v1/call-for-interview",
 				data: {
-					user_id: user_id,
-					job_id: props.id,
+					application_id: props.applicationId,
 				},
 			});
 
 			set_visible(false);
-
 			return;
 		} catch (error) {
-			console.log(error.response.data);
 			return;
 		}
 	};
@@ -56,34 +46,34 @@ function Job(props) {
 			{visible && (
 				<Card style={styles.container}>
 					<View style={styles.cardHeader}>
-						<View style={styles.avatar}>
-							<Ionicons name='pricetags-sharp' size={24} color='black' />
+						<View style={styles.employerProfileContainer}>
+							<FontAwesome5 name='user-tie' size={24} color='black' />
 						</View>
-						<HeadingS style={styles.titleText}>{props.service}</HeadingS>
+						<HeadingS style={styles.titleText}>
+							{props.firstName} {props.lastName}
+						</HeadingS>
 					</View>
+
 					<View style={styles.row}>
 						<EvilIcons name='location' size={30} color={color.primary} />
 						<Body style={styles.locationText}>
 							{props.region}, {props.ward}
 						</Body>
 					</View>
+
 					<View style={styles.row}>
-						<EvilIcons name='archive' size={30} color={color.primary} />
-						<Body style={styles.salaryText}> {props.genderPreference} </Body>
-					</View>
-					<View style={styles.row}>
-						<EvilIcons name='archive' size={30} color={color.primary} />
-						<Body style={styles.salaryText}> {props.type}</Body>
+						<EvilIcons name='tag' size={30} color={color.primary} />
+						<Body style={styles.salaryText}>{props.phoneNumber}</Body>
 					</View>
 
 					<View style={styles.row}>
-						<EvilIcons name='credit-card' size={30} color={color.primary} />
-						<Body style={styles.salaryText}> Tsh {props.salary} </Body>
+						<EvilIcons name='sc-instagram' size={30} color={color.primary} />
+						<Body style={styles.salaryText}> {props.gender} </Body>
 					</View>
 
 					<View style={styles.row}>
-						<EvilIcons name='exclamation' size={30} color={color.primary} />
-						<Body style={styles.salaryText}>{props.status} </Body>
+						<EvilIcons name='sc-instagram' size={30} color={color.primary} />
+						<Body style={styles.salaryText}> {props.age} </Body>
 					</View>
 
 					<View style={styles.actionsContainer}>
@@ -96,9 +86,8 @@ function Job(props) {
 
 						<TouchableOpacity
 							style={styles.buttonContainer}
-							activeOpacity={0.8}
-							onPress={handleApply}>
-							<ButtonText style={styles.applyText}>apply</ButtonText>
+							onPress={handleInterview}>
+							<ButtonText style={styles.applyText}>accept</ButtonText>
 						</TouchableOpacity>
 					</View>
 				</Card>
@@ -113,6 +102,7 @@ const styles = StyleSheet.create({
 		padding: 15,
 		borderRadius: 15,
 		backgroundColor: "white",
+		marginBottom: 10,
 	},
 
 	actionsContainer: {
@@ -125,7 +115,7 @@ const styles = StyleSheet.create({
 	titleText: {
 		fontWeight: "normal",
 	},
-	avatar: {
+	employerProfileContainer: {
 		backgroundColor: color.lightgray,
 		padding: 10,
 		justifyContent: "center",
@@ -134,7 +124,6 @@ const styles = StyleSheet.create({
 		width: 50,
 		height: 50,
 		marginRight: 10,
-		flexDirection: "row",
 	},
 	salaryText: {
 		color: color.dimblack,
@@ -170,11 +159,12 @@ const styles = StyleSheet.create({
 	hideText: {
 		color: color.primary,
 	},
+
 	row: {
 		flexDirection: "row",
 		alignItems: "center",
-		marginTop: 15,
-		marginLeft: 25,
+		marginTop: 10,
+		marginLeft: 10,
 	},
 	cardHeader: {
 		flexDirection: "row",
@@ -182,4 +172,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default memo(Job);
+export default memo(Applicant);

@@ -7,6 +7,7 @@ import {
 	StatusBar,
 	Image,
 	Modal,
+	FlatList,
 } from "react-native";
 import color from "../../color";
 import {Body, HeadingS} from "../../typography";
@@ -21,10 +22,54 @@ import {
 import TopBar from "../TopBar";
 import Post from "../Home/PostJob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 function MaidHome(props) {
 	// initializing dispatch.
 	const dispatch = useDispatch();
+	const [data, set_data] = React.useState([]);
+
+	const user_id = useSelector((state) => {
+		return state.auth.userId;
+	});
+
+	React.useEffect(() => {
+		(async () => {
+			try {
+				let response = await axios({
+					method: "GET",
+					url: "http://nuhu-backend.herokuapp.com/api/v1/available-jobs",
+					params: {
+						user_id: user_id,
+					},
+				});
+
+				set_data(response.data.data);
+				return;
+			} catch (error) {
+				console.log(error.response.data);
+			}
+		})();
+
+		return () => {
+			set_data([]);
+		};
+	}, []);
+
+	const renderItem = ({item}) => {
+		return (
+			<Job
+				service={item.service}
+				genderPreference={item.gender_preference}
+				region={item.region}
+				salary={item.salary}
+				status={item.job_status}
+				ward={item.ward}
+				type={item.job_type}
+				id={item.id}
+			/>
+		);
+	};
 
 	return (
 		<View style={styles.screen}>
@@ -34,8 +79,15 @@ function MaidHome(props) {
 
 			{/* 👊 body contents. */}
 			<View style={styles.bodyContainer}>
-				<Body>Recent jobs maids.</Body>
-				<Job />
+				<Body>Recent jobs.</Body>
+
+				<FlatList
+					data={data}
+					keyExtractor={(item) => item.id}
+					renderItem={renderItem}
+					showsVerticalScrollIndicator={false}
+					contentContainerStyle={styles.flatlistContainer}
+				/>
 			</View>
 		</View>
 	);
@@ -65,6 +117,9 @@ const styles = StyleSheet.create({
 	floatingText: {
 		color: "white",
 		fontWeight: "bold",
+	},
+	flatlistContainer: {
+		paddingBottom: 60,
 	},
 });
 

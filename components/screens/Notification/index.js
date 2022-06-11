@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MaidStatus from "./maid";
-import EmployerStatus from "./employer-status";
+import EmployerStatus from "./employer";
 import AgentAnimation from "./agent-animation";
 
 function Notification(props) {

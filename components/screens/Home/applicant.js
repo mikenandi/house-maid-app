@@ -11,7 +11,7 @@ import color from "../../color";
 import {Body, BodyS, HeadingS, ButtonText} from "../../typography";
 import {EvilIcons} from "@expo/vector-icons";
 import {FontAwesome5} from "@expo/vector-icons";
-import {Ionicons} from "@expo/vector-icons";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 import JobDescription from "./job-description";
 import {useDispatch, useSelector} from "react-redux";
 import {showDescription} from "../../../Store/homeScreen/modalSlice";
@@ -38,6 +38,7 @@ function Applicant(props) {
 			});
 
 			set_visible(false);
+
 			return;
 		} catch (error) {
 			return;
@@ -65,17 +66,29 @@ function Applicant(props) {
 					</View>
 
 					<View style={styles.row}>
-						<EvilIcons name='tag' size={30} color={color.primary} />
+						<MaterialCommunityIcons
+							name='phone-dial-outline'
+							size={22}
+							color={color.primary}
+						/>
 						<Body style={styles.salaryText}>{props.phoneNumber}</Body>
 					</View>
 
 					<View style={styles.row}>
-						<EvilIcons name='sc-instagram' size={30} color={color.primary} />
+						<MaterialCommunityIcons
+							name='checkbox-multiple-blank-circle-outline'
+							size={24}
+							color={color.primary}
+						/>
 						<Body style={styles.salaryText}> {props.gender} </Body>
 					</View>
 
 					<View style={styles.row}>
-						<EvilIcons name='sc-instagram' size={30} color={color.primary} />
+						<MaterialCommunityIcons
+							name='checkbox-multiple-blank-circle-outline'
+							size={24}
+							color={color.primary}
+						/>
 						<Body style={styles.salaryText}> {props.age} </Body>
 					</View>
 

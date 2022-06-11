@@ -10,6 +10,7 @@ import {
 import color from "../../color";
 import {Body, BodyS, HeadingS, ButtonText} from "../../typography";
 import {EvilIcons} from "@expo/vector-icons";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {FontAwesome5} from "@expo/vector-icons";
 import {useDispatch, useSelector} from "react-redux";
 import Card from "../../Card";
@@ -19,22 +20,26 @@ function Applicant(props) {
 	// 👋 using use dispatch.
 	const dispatch = useDispatch();
 	const [visible, set_visible] = React.useState(true);
+	const user_id = useSelector((state) => {
+		return state.auth.userId;
+	});
 
 	const handleHide = () => {
 		set_visible(false);
 	};
 
-	const handleInterview = async () => {
+	const handleAccept = async () => {
 		try {
 			let response = await axios({
 				method: "PUT",
-				url: "http://nuhu-backend.herokuapp.com/api/v1/call-for-interview",
-				data: {
-					application_id: props.applicationId,
+				url: "http://nuhu-backend.herokuapp.com/api/v1/accept-applicant",
+				params: {
+					application_id: props.id,
 				},
 			});
 
 			set_visible(false);
+
 			return;
 		} catch (error) {
 			return;
@@ -49,30 +54,44 @@ function Applicant(props) {
 						<View style={styles.employerProfileContainer}>
 							<FontAwesome5 name='user-tie' size={24} color='black' />
 						</View>
-						<HeadingS style={styles.titleText}>
-							{props.firstName} {props.lastName}
-						</HeadingS>
+						<HeadingS style={styles.titleText}>{props.name}</HeadingS>
 					</View>
 
 					<View style={styles.row}>
-						<EvilIcons name='location' size={30} color={color.primary} />
+						<MaterialCommunityIcons
+							name='checkbox-blank-badge-outline'
+							size={24}
+							color={color.primary}
+						/>
 						<Body style={styles.locationText}>
-							{props.region}, {props.ward}
+							applied for: {props.service}
 						</Body>
 					</View>
 
 					<View style={styles.row}>
-						<EvilIcons name='tag' size={30} color={color.primary} />
+						<MaterialCommunityIcons
+							name='checkbox-blank-badge-outline'
+							size={24}
+							color={color.primary}
+						/>
 						<Body style={styles.salaryText}>{props.phoneNumber}</Body>
 					</View>
 
 					<View style={styles.row}>
-						<EvilIcons name='sc-instagram' size={30} color={color.primary} />
+						<MaterialCommunityIcons
+							name='checkbox-blank-badge-outline'
+							size={24}
+							color={color.primary}
+						/>
 						<Body style={styles.salaryText}> {props.gender} </Body>
 					</View>
 
 					<View style={styles.row}>
-						<EvilIcons name='sc-instagram' size={30} color={color.primary} />
+						<MaterialCommunityIcons
+							name='checkbox-blank-badge-outline'
+							size={24}
+							color={color.primary}
+						/>
 						<Body style={styles.salaryText}> {props.age} </Body>
 					</View>
 
@@ -86,7 +105,7 @@ function Applicant(props) {
 
 						<TouchableOpacity
 							style={styles.buttonContainer}
-							onPress={handleInterview}>
+							onPress={handleAccept}>
 							<ButtonText style={styles.applyText}>accept</ButtonText>
 						</TouchableOpacity>
 					</View>
@@ -132,6 +151,7 @@ const styles = StyleSheet.create({
 	locationText: {
 		color: color.dimblack,
 		marginLeft: 10,
+		fontFamily: "serif",
 	},
 	buttonContainer: {
 		backgroundColor: color.primary,

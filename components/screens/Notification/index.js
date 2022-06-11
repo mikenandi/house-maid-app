@@ -27,6 +27,10 @@ function Notification(props) {
 				return;
 			}
 		})();
+
+		return () => {
+			setUserType("");
+		};
 	}, []);
 
 	if (userType === "employer") return <EmployerStatus />;

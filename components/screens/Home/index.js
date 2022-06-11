@@ -21,11 +21,12 @@ import {
 import TopBar from "../TopBar";
 import Post from "../Home/PostJob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {saveUserId} from "../../../Store/auth";
+import {saveProfile, saveUserId} from "../../../Store/auth";
 import EmployerHome from "./employer-home";
 import AgentHome from "./agent-home";
 import MaidHome from "./maid-home";
 import Loading from "../../Loading";
+import axios from "axios";
 
 function Home(props) {
 	//initializing dispatch
@@ -38,6 +39,16 @@ function Home(props) {
 			try {
 				let user_type = await AsyncStorage.getItem("user_type");
 				let user_id = await AsyncStorage.getItem("user_id");
+
+				let response = await axios({
+					method: "GET",
+					url: "http://nuhu-backend.herokuapp.com/api/v1/profile",
+					params: {
+						user_id: user_id,
+					},
+				});
+
+				dispatch(saveProfile(response.data.data));
 
 				dispatch(saveUserId(user_id));
 

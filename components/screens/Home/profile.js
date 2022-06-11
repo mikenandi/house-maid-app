@@ -12,7 +12,7 @@ import {Body, BodyS, HeadingM, HeadingS} from "../../typography";
 import {Entypo} from "@expo/vector-icons";
 import {MaterialCommunityIcons, Feather} from "@expo/vector-icons";
 import {Ionicons} from "@expo/vector-icons";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {hideProfile} from "../../../Store/homeScreen/modalSlice";
 import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -24,32 +24,11 @@ function Profile(props) {
 	// initializing dispatch.
 
 	const dispatch = useDispatch();
-	const [profile, setProfile] = React.useState({});
+	// const [profile, setProfile] = React.useState({});
+	const profile = useSelector((state) => {
+		return state.auth.profile;
+	});
 	const [isloading, set_isloading] = React.useState(false);
-
-	React.useEffect(() => {
-		(async () => {
-			try {
-				let user_id = await AsyncStorage.getItem("user_id");
-
-				let response = await axios({
-					method: "GET",
-					url: "http://nuhu-backend.herokuapp.com/api/v1/profile",
-					params: {
-						user_id: user_id,
-					},
-				});
-				setProfile(response.data.data);
-				return;
-			} catch (error) {
-				return;
-			}
-		})();
-
-		return () => {
-			setProfile({});
-		};
-	}, []);
 
 	// function to change state of the visible property to hide the modal
 	const handleHide = () => {

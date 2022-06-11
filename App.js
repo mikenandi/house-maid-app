@@ -1,12 +1,9 @@
 import * as React from "react";
-import {Button, View, StyleSheet, StatusBar} from "react-native";
+import {StatusBar} from "react-native";
 import {NavigationContainer} from "@react-navigation/native";
 import Home from "./components/screens/Home";
 import Notification from "./components/screens/Notification";
-import {FontAwesome} from "@expo/vector-icons";
-import {AntDesign} from "@expo/vector-icons";
 import {MaterialIcons} from "@expo/vector-icons";
-import {Body, BodyS, HeadingM, HeadingS} from "./components/typography";
 import color from "./components/color";
 import {store} from "./Store";
 import {Provider, useDispatch, useSelector} from "react-redux";
@@ -20,8 +17,9 @@ import LocationForm from "./components/screens/Signup/locationForm";
 import PasswordForm from "./components/screens/Signup/passwordForm";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import * as SecureStore from "expo-secure-store";
-import {loggedIn} from "./Store/auth";
+import {loggedIn, saveProfile} from "./Store/auth";
 import Loading from "./components/Loading";
+import axios from "axios";
 
 // initiating screens functions.
 const Stack = createStackNavigator();
@@ -46,8 +44,8 @@ function MyAuth() {
 
 				if (!!token) {
 					set_isloading(false);
-
 					dispatch(loggedIn());
+
 					return;
 				}
 
@@ -155,7 +153,7 @@ function MyTabs() {
 	);
 }
 
-// 👇
+// 👇 loading the whole app component.
 export default function App() {
 	return (
 		<Provider store={store}>
@@ -166,30 +164,3 @@ export default function App() {
 		</Provider>
 	);
 }
-
-const styles = StyleSheet.create({
-	rowContainer: {
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "flex-start",
-		width: "100%",
-		borderBottomWidth: 1.5,
-		borderBottomColor: color.lightgray,
-		paddingBottom: 20,
-	},
-	editText: {
-		color: "gray",
-	},
-	wordsContainer: {
-		marginLeft: 10,
-	},
-	LogoText: {
-		color: color.primary,
-		fontWeight: "bold",
-	},
-	drawerText: {
-		fontSize: 15,
-		fontWeight: "normal",
-		fontFamily: "serif",
-	},
-});

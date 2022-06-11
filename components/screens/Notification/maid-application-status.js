@@ -62,13 +62,11 @@ function Job(props) {
 					</View>
 					<View style={styles.row}>
 						<EvilIcons name='location' size={30} color={color.primary} />
-						<Body style={styles.locationText}>
-							{props.region}, {props.ward}
-						</Body>
+						<Body style={styles.locationText}>{props.employer}</Body>
 					</View>
 					<View style={styles.row}>
 						<EvilIcons name='archive' size={30} color={color.primary} />
-						<Body style={styles.salaryText}> {props.genderPreference} </Body>
+						<Body style={styles.salaryText}> {props.phoneNumber} </Body>
 					</View>
 					<View style={styles.row}>
 						<EvilIcons name='archive' size={30} color={color.primary} />

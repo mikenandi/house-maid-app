@@ -41,6 +41,16 @@ function Login(props) {
 		return;
 	};
 
+	// Function to check if a string is email or not.
+	const isEmail = (emailAdress) => {
+		let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+		if (emailAdress.match(regexEmail)) {
+			return true;
+		} else {
+			return false;
+		}
+	};
+
 	const handlePassword = (password) => {
 		set_password(password);
 		return;
@@ -48,6 +58,15 @@ function Login(props) {
 
 	const handleLogin = async () => {
 		try {
+			if (!isEmail(email)) {
+				set("invalid email");
+
+				setTimeout(() => {
+					set_error("");
+				}, 3000);
+
+				return;
+			}
 			if (!email || !password) {
 				set_error("fill all fields");
 

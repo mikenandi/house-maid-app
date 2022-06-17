@@ -118,7 +118,7 @@ function PasswordForm(props) {
 			return;
 		} catch (error) {
 			set_isloading(false);
-			set_error(error.response.message);
+			set_error(error.response.data.message);
 			return;
 		}
 	};
@@ -273,6 +273,7 @@ const styles = StyleSheet.create({
 		color: "red",
 		marginLeft: 10,
 		textTransform: "capitalize",
+		fontWeight: "bold",
 	},
 });
 

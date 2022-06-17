@@ -38,6 +38,16 @@ function ContactsForm(props) {
 		return;
 	};
 
+	// Function to check if a string is email or not.
+	const isEmail = (emailAdress) => {
+		let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+		if (emailAdress.match(regexEmail)) {
+			return true;
+		} else {
+			return false;
+		}
+	};
+
 	const handlePhoneNumber = (phone_number) => {
 		set_phone_number(phone_number);
 		return;
@@ -49,11 +59,23 @@ function ContactsForm(props) {
 	};
 
 	const handleGoNext = () => {
-		if (!email && !phone_number) {
-			set_error("fill all fields before going next step.");
+		if (!isEmail(email)) {
+			set_error("invalid email");
+
 			setTimeout(() => {
 				set_error("");
 			}, 5000);
+
+			return;
+		}
+
+		if (!email && !phone_number) {
+			set_error("fill all fields before going next step.");
+
+			setTimeout(() => {
+				set_error("");
+			}, 5000);
+
 			return;
 		}
 

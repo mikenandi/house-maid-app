@@ -59,7 +59,7 @@ function Login(props) {
 	const handleLogin = async () => {
 		try {
 			if (!isEmail(email)) {
-				set("invalid email");
+				set_error("invalid email");
 
 				setTimeout(() => {
 					set_error("");
@@ -259,6 +259,7 @@ const styles = StyleSheet.create({
 		color: "red",
 		marginLeft: 10,
 		textTransform: "capitalize",
+		fontWeight: "bold",
 	},
 });
 

@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
 	buttonContainer: {
 		backgroundColor: color.primary,
 		padding: 10,
-		width: 100,
+		width: 120,
 		justifyContent: "center",
 		alignItems: "center",
 		marginTop: 5,
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
 	hidebutton: {
 		backgroundColor: "white",
 		padding: 10,
-		width: 100,
+		width: 120,
 		justifyContent: "center",
 		alignItems: "center",
 		marginTop: 5,

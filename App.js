@@ -20,6 +20,7 @@ import * as SecureStore from "expo-secure-store";
 import {loggedIn, saveProfile} from "./Store/auth";
 import Loading from "./components/Loading";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // initiating screens functions.
 const Stack = createStackNavigator();

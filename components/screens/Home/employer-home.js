@@ -19,6 +19,7 @@ import TopBar from "../TopBar";
 import Post from "../Home/PostJob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import Card from "../../Card";
 
 function AgentHome(props) {
 	//initializing dispatch
@@ -87,6 +88,7 @@ function AgentHome(props) {
 			{/* 👊 body contents. */}
 			<View style={styles.bodyContainer}>
 				<Body>Recent applications.</Body>
+
 				<FlatList
 					data={applications}
 					keyExtractor={(item) => item.id}
@@ -141,6 +143,11 @@ const styles = StyleSheet.create({
 	},
 	flatlistContainer: {
 		paddingBottom: 100,
+	},
+	postedJobsContainer: {
+		padding: 20,
+		borderRadius: 10,
+		marginTop: 10,
 	},
 });
 

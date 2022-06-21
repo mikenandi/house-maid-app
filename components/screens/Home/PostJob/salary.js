@@ -66,8 +66,8 @@ function Salary(props) {
 			return;
 		}
 
-		if (Number(salary) < 100000) {
-			set_error("salary should be greater than Tsh 100,000");
+		if (Number(salary) < 50000) {
+			set_error("salary should be greater than Tsh 50,000");
 
 			setTimeout(() => {
 				set_error("");

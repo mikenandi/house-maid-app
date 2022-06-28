@@ -21,6 +21,16 @@ import {loggedIn, saveProfile} from "./Store/auth";
 import Loading from "./components/Loading";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
+
+// Nofitifications settings.
+Notifications.setNotificationHandler({
+	handleNotification: async () => ({
+		shouldShowAlert: true,
+		shouldPlaySound: true,
+		shouldSetBadge: false,
+	}),
+});
 
 // initiating screens functions.
 const Stack = createStackNavigator();

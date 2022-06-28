@@ -23,6 +23,8 @@ import TopBar from "../TopBar";
 import Post from "../Home/PostJob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import * as helpers from "../../helpers";
+import * as Notifications from "expo-notifications";
 
 function MaidHome(props) {
 	// initializing dispatch.
@@ -48,12 +50,37 @@ function MaidHome(props) {
 				return;
 			} catch (error) {
 				console.log(error.response.data);
+				return;
 			}
 		})();
 
 		return () => {
 			set_data([]);
 		};
+	}, []);
+
+	// Getting token from register for token helpers.
+	React.useEffect(() => {
+		// getToken();
+		(async () => {
+			try {
+				let token = await helpers.registerForPushNotificationsAsync();
+
+				let response = await axios({
+					method: "POST",
+					url: "http://nuhu-backend.herokuapp.com/api/v1/save-token-record",
+					data: {
+						user_id: user_id,
+						notificationToken: token,
+					},
+				});
+				console.log(response.data);
+				return;
+			} catch (error) {
+				console.log(error.response.data);
+				return;
+			}
+		})();
 	}, []);
 
 	const renderItem = ({item}) => {

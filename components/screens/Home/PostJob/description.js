@@ -82,6 +82,7 @@ function Salary(props) {
 
 			return;
 		} catch (error) {
+			console.log(error.response.data);
 			return;
 		}
 	};

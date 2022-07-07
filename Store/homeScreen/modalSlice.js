@@ -10,6 +10,7 @@ const initialState = {
 	jobTypeVisible: false,
 	salaryVisible: false,
 	postDescVisible: false,
+	postedJobsVisible: false,
 };
 
 export const modalSlice = createSlice({
@@ -77,6 +78,12 @@ export const modalSlice = createSlice({
 			state.postDescVisible = false;
 			state.salaryVisible = false;
 		},
+		showPostedJobs: (state, actions) => {
+			state.postedJobsVisible = true;
+		},
+		hidePostedJobs: (state, actions) => {
+			state.postedJobsVisible = false;
+		},
 	},
 });
 
@@ -100,6 +107,8 @@ export const {
 	showPostDesc,
 	hidePostDesc,
 	hidePostModals,
+	showPostedJobs,
+	hidePostedJobs,
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

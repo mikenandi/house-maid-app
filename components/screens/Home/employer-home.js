@@ -11,15 +11,16 @@ import {
 } from "react-native";
 import color from "../../color";
 import {Body, HeadingS} from "../../typography";
-import {AntDesign} from "@expo/vector-icons";
+import {AntDesign, Foundation} from "@expo/vector-icons";
 import Applicant from "./applicant";
 import {useDispatch, useSelector} from "react-redux";
-import {showPost} from "../../../Store/homeScreen/modalSlice";
+import {showPost, showPostedJobs} from "../../../Store/homeScreen/modalSlice";
 import TopBar from "../TopBar";
 import Post from "../Home/PostJob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import Card from "../../Card";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
+import MyJobs from "./PostedJobs";
 
 function AgentHome(props) {
 	//initializing dispatch
@@ -27,6 +28,10 @@ function AgentHome(props) {
 
 	const visible = useSelector((state) => {
 		return state.modal.postVisible;
+	});
+
+	const JobsVisible = useSelector((state) => {
+		return state.modal.postedJobsVisible;
 	});
 
 	const user_id = useSelector((state) => {
@@ -37,6 +42,10 @@ function AgentHome(props) {
 
 	const handlePost = () => {
 		dispatch(showPost());
+	};
+
+	const handleShowJobs = () => {
+		dispatch(showPostedJobs());
 	};
 
 	React.useEffect(() => {
@@ -61,7 +70,7 @@ function AgentHome(props) {
 		return () => {
 			set_applications([]);
 		};
-	}, []);
+	}, [visible]);
 
 	const renderItem = ({item}) => {
 		return (
@@ -99,6 +108,17 @@ function AgentHome(props) {
 			</View>
 
 			{/* 👋 making person to post an job. */}
+			<TouchableOpacity
+				activeOpacity={0.9}
+				onPress={handleShowJobs}
+				style={styles.jobListContaier}>
+				<MaterialCommunityIcons
+					name='format-list-checks'
+					size={20}
+					color='white'
+				/>
+				{/* <Body style={styles.floatingText}>Post</Body> */}
+			</TouchableOpacity>
 
 			<TouchableOpacity
 				activeOpacity={0.9}
@@ -111,6 +131,10 @@ function AgentHome(props) {
 			{/* ✋ */}
 			<Modal transparent={false} visible={visible} animationType='fade'>
 				<Post />
+			</Modal>
+
+			<Modal transparent={false} visible={JobsVisible} animationType='fade'>
+				<MyJobs />
 			</Modal>
 		</View>
 	);
@@ -128,14 +152,15 @@ const styles = StyleSheet.create({
 	buttonContaier: {
 		backgroundColor: "seagreen",
 		padding: 15,
-		width: 60,
+		width: 50,
+		height: 50,
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-around",
 		position: "absolute",
 		bottom: 30,
 		right: 15,
-		borderRadius: 10,
+		borderRadius: 30,
 	},
 	floatingText: {
 		color: "white",
@@ -148,6 +173,19 @@ const styles = StyleSheet.create({
 		padding: 20,
 		borderRadius: 10,
 		marginTop: 10,
+	},
+	jobListContaier: {
+		backgroundColor: "seagreen",
+		padding: 15,
+		width: 50,
+		height: 50,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-around",
+		position: "absolute",
+		bottom: 90,
+		right: 15,
+		borderRadius: 30,
 	},
 });
 

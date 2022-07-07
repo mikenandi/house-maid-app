@@ -53,7 +53,7 @@ function Home(props) {
 	return (
 		<View style={styles.screen}>
 			<View style={styles.container}>
-				<HeadingM style={styles.logoText}>Smart Maids</HeadingM>
+				<HeadingM style={styles.logoText}>House Maids</HeadingM>
 
 				<View style={styles.navigationContaier}>
 					{/* 👇 Button to show and hide notifications. */}

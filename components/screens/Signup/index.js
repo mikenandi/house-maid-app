@@ -60,7 +60,7 @@ function Register(props) {
 			<StatusBar backgroundColor='white' />
 			<View style={styles.container}>
 				{/* logo of the app. */}
-				<HeadingL style={styles.logoText}>Smart Maids</HeadingL>
+				<HeadingL style={styles.logoText}>House Maids</HeadingL>
 
 				{/* title of the activity in the screen. */}
 				<HeadingS style={styles.titleText}>Register as </HeadingS>

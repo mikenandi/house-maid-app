@@ -19,6 +19,9 @@ export const postJobSlice = createSlice({
 			state.service = "home_cleaning";
 		},
 		homeCooking: (state, actions) => {
+			console.log("====================================");
+			console.log("passed here");
+			console.log("====================================");
 			state.service = "home_cooking";
 		},
 		homeBabySitter: (state, actions) => {

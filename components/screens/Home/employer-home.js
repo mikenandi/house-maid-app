@@ -73,6 +73,7 @@ function AgentHome(props) {
 	}, [visible]);
 
 	const renderItem = ({item}) => {
+		console.log(item);
 		return (
 			<Applicant
 				id={item.id}
@@ -100,7 +101,7 @@ function AgentHome(props) {
 
 				<FlatList
 					data={applications}
-					keyExtractor={(item) => item.id}
+					keyExtractor={(item) => item.application_id}
 					renderItem={renderItem}
 					showsVerticalScrollIndicator={false}
 					contentContainerStyle={styles.flatlistContainer}

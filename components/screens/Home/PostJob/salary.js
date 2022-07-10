@@ -37,6 +37,8 @@ import {
 } from "../../../../Store/homeScreen/modalSlice";
 import Description from "../PostJob/description";
 import {saveSalary} from "../../../../Store/homeScreen/postJobSlice";
+import {restorePost} from "../../../../Store/homeScreen/postJobSlice";
+import Loading from "../../../Loading";
 
 function Salary(props) {
 	// initializing dispatch
@@ -87,6 +89,46 @@ function Salary(props) {
 	const handleSalary = (salary) => {
 		set_salary(salary);
 		return;
+	};
+
+	const handlePost = async () => {
+		try {
+			let user_id = await AsyncStorage.getItem("user_id");
+
+			set_isloading(true);
+
+			console.log(post_data.service);
+
+			let response = await axios({
+				method: "POST",
+				url: "http://nuhu-backend.herokuapp.com/api/v1/post-job",
+				data: {
+					user_id: user_id,
+					service: post_data.service,
+					gender_preference: post_data.gender_preference,
+					job_type: post_data.job_type,
+					salary: post_data.salary,
+					description: description,
+				},
+			});
+
+			dispatch(restorePost());
+
+			dispatch(hidePostModals());
+
+			return;
+		} catch (error) {
+			set_isloading(false);
+
+			setErrorMsg("Ooops error while posting a job.");
+
+			setTimeout(() => {
+				setErrorMsg("");
+			}, 5000);
+
+			console.log(error.response.data);
+			return;
+		}
 	};
 
 	return (
@@ -210,7 +252,6 @@ const styles = StyleSheet.create({
 	},
 	textInput: {
 		padding: 15,
-		borderWidth: 1,
 		fontSize: 25,
 		width: 180,
 		borderRadius: 0,

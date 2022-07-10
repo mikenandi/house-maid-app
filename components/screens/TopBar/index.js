@@ -57,16 +57,18 @@ function Home(props) {
 
 				<View style={styles.navigationContaier}>
 					{/* 👇 Button to show and hide notifications. */}
-					<TouchableOpacity
-						activeOpacity={0.9}
-						onPress={handleShowNotification}>
-						<EvilIcons
-							name='bell'
-							size={28}
-							color='black'
-							style={styles.iconContainer}
-						/>
-					</TouchableOpacity>
+					{false && (
+						<TouchableOpacity
+							activeOpacity={0.9}
+							onPress={handleShowNotification}>
+							<EvilIcons
+								name='bell'
+								size={28}
+								color='black'
+								style={styles.iconContainer}
+							/>
+						</TouchableOpacity>
+					)}
 
 					{/* 👇 A button to show and hide search. */}
 					{false && (

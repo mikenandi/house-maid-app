@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import color from "../../color";
 import {Body, BodyS, HeadingS, ButtonText} from "../../typography";
-import {EvilIcons} from "@expo/vector-icons";
+import {EvilIcons, AntDesign} from "@expo/vector-icons";
 import {FontAwesome5} from "@expo/vector-icons";
 import {Ionicons} from "@expo/vector-icons";
 import JobDescription from "./job-description";
@@ -59,7 +59,9 @@ function Job(props) {
 						<View style={styles.avatar}>
 							<Ionicons name='pricetags-sharp' size={24} color='black' />
 						</View>
-						<HeadingS style={styles.titleText}>{props.service}</HeadingS>
+						<HeadingS style={styles.titleText}>
+							{props.service.replace(/_/gi, " ")}
+						</HeadingS>
 					</View>
 					<View style={styles.row}>
 						<EvilIcons name='location' size={30} color={color.primary} />
@@ -73,7 +75,10 @@ function Job(props) {
 					</View>
 					<View style={styles.row}>
 						<EvilIcons name='archive' size={30} color={color.primary} />
-						<Body style={styles.salaryText}> {props.type}</Body>
+						<Body style={styles.salaryText}>
+							{" "}
+							{props.type.replace(/-/gi, " ")}
+						</Body>
 					</View>
 
 					<View style={styles.row}>
@@ -84,6 +89,14 @@ function Job(props) {
 					<View style={styles.row}>
 						<EvilIcons name='exclamation' size={30} color={color.primary} />
 						<Body style={styles.salaryText}>{props.status} </Body>
+					</View>
+
+					<View style={styles.rowDescription}>
+						<AntDesign name='export' size={30} color={color.primary} />
+						<View>
+							<Body style={styles.descriptionText}> Description</Body>
+							<BodyS style={styles.salaryText}>{props.description}</BodyS>
+						</View>
 					</View>
 
 					<View style={styles.actionsContainer}>
@@ -109,7 +122,7 @@ function Job(props) {
 
 const styles = StyleSheet.create({
 	container: {
-		marginTop: 5,
+		marginTop: 20,
 		padding: 15,
 		borderRadius: 15,
 		backgroundColor: "white",
@@ -139,6 +152,7 @@ const styles = StyleSheet.create({
 	salaryText: {
 		color: color.dimblack,
 		marginLeft: 10,
+		width: 240,
 	},
 	locationText: {
 		color: color.dimblack,
@@ -179,6 +193,16 @@ const styles = StyleSheet.create({
 	cardHeader: {
 		flexDirection: "row",
 		alignItems: "center",
+	},
+	descriptionText: {
+		marginBottom: 3,
+	},
+	rowDescription: {
+		flexDirection: "row",
+		alignItems: "flex-start",
+		marginTop: 15,
+		marginLeft: 25,
+		marginBottom: 10,
 	},
 });
 

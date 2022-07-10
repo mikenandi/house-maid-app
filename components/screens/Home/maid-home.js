@@ -46,6 +46,8 @@ function MaidHome(props) {
 					},
 				});
 
+				console.log(response.data.data);
+
 				set_data(response.data.data);
 				return;
 			} catch (error) {
@@ -65,6 +67,8 @@ function MaidHome(props) {
 		(async () => {
 			try {
 				let token = await helpers.registerForPushNotificationsAsync();
+
+				console.log(token);
 
 				let response = await axios({
 					method: "POST",
@@ -86,6 +90,7 @@ function MaidHome(props) {
 	const renderItem = ({item}) => {
 		return (
 			<Job
+				description={item.description}
 				service={item.service}
 				genderPreference={item.gender_preference}
 				region={item.region}
@@ -146,7 +151,7 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 	},
 	flatlistContainer: {
-		paddingBottom: 60,
+		paddingBottom: 70,
 	},
 });
 

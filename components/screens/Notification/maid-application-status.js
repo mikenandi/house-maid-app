@@ -58,12 +58,17 @@ function Job(props) {
 						<View style={styles.avatar}>
 							<Ionicons name='pricetags-sharp' size={24} color='black' />
 						</View>
-						<HeadingS style={styles.titleText}>{props.service}</HeadingS>
+						<HeadingS style={styles.titleText}>
+							{props.service.replace(/_/gi, " ")}
+						</HeadingS>
 					</View>
-					<View style={styles.row}>
-						<EvilIcons name='location' size={30} color={color.primary} />
-						<Body style={styles.locationText}>{props.employer}</Body>
-					</View>
+					{false && (
+						<View style={styles.row}>
+							<EvilIcons name='location' size={30} color={color.primary} />
+							<Body style={styles.locationText}>{props.employer}</Body>
+						</View>
+					)}
+
 					<View style={styles.row}>
 						<EvilIcons name='archive' size={30} color={color.primary} />
 						<Body style={styles.salaryText}> {props.phoneNumber} </Body>
@@ -80,7 +85,9 @@ function Job(props) {
 
 					<View style={styles.row}>
 						<EvilIcons name='exclamation' size={30} color={color.primary} />
-						<Body style={styles.salaryText}>{props.status} </Body>
+						<Body style={styles.salaryText}>
+							{props.status.replace(/-/gi, " ")}{" "}
+						</Body>
 					</View>
 					{false && (
 						<View style={styles.actionsContainer}>

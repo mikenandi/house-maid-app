@@ -143,7 +143,7 @@ function Login(props) {
 
 			<View>
 				{/* logo of the app. */}
-				<HeadingL style={styles.logoText}>Smart Maids</HeadingL>
+				<HeadingL style={styles.logoText}>House Maids</HeadingL>
 
 				{/* title of the activity in the screen. */}
 				<HeadingM style={styles.titleText}>Login</HeadingM>

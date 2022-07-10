@@ -64,7 +64,7 @@ function Applicant(props) {
 							color={color.primary}
 						/>
 						<Body style={styles.locationText}>
-							applied for: {props.service}
+							applied for: {props.service.replace(/_/gi, " ")}
 						</Body>
 					</View>
 

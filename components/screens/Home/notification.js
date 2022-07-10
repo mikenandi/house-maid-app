@@ -12,6 +12,9 @@ import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {Ionicons} from "@expo/vector-icons";
 import {useDispatch} from "react-redux";
 import {hideNotification} from "../../../Store/homeScreen/modalSlice";
+import * as Notifications from "expo-notifications";
+import {SvgUri} from "react-native-svg";
+import SVG from "../../../assets/undraw_no_data_re_kwbl.svg";
 
 function Profile(props) {
 	// initializing dispatch.
@@ -31,11 +34,17 @@ function Profile(props) {
 				</TouchableOpacity>
 				<HeadingS style={styles.headerText}>Notifications</HeadingS>
 			</View>
-			<View style={styles.body}>
-				<View style={styles.notificationContainer}>
-					<Body>notifications</Body>
+
+			{true && (
+				<View style={styles.body}>
+					{false && (
+						<View style={styles.notificationContainer}>
+							<Body>notifications</Body>
+						</View>
+					)}
+					<SvgUri width={100} height={100} svgXmlData={SVG} />
 				</View>
-			</View>
+			)}
 		</View>
 	);
 }

@@ -73,7 +73,7 @@ function PostJob(props) {
 	};
 
 	const handleCooking = () => {
-		dispatch(homeCooking);
+		dispatch(homeCooking());
 		dispatch(showGenderPreference());
 		return;
 	};

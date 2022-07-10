@@ -60,15 +60,18 @@ function Job(props) {
 							<Ionicons name='pricetags-sharp' size={24} color='black' />
 						</View>
 						<HeadingS style={styles.titleText}>
-							{props.service.replace("_", " ")}
+							{props.service.replace(/_/gi, " ")}
 						</HeadingS>
 					</View>
-					<View style={styles.row}>
-						<EvilIcons name='location' size={30} color={color.primary} />
-						<Body style={styles.locationText}>
-							{props.region}, {props.ward}
-						</Body>
-					</View>
+					{false && (
+						<View style={styles.row}>
+							<EvilIcons name='location' size={30} color={color.primary} />
+							<Body style={styles.locationText}>
+								{props.region}, {props.ward}
+							</Body>
+						</View>
+					)}
+
 					<View style={styles.row}>
 						<EvilIcons name='archive' size={30} color={color.primary} />
 						<Body style={styles.salaryText}> {props.genderPreference} </Body>

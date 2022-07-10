@@ -112,15 +112,18 @@ function Salary(props) {
 
 			<View style={styles.bodyContainer}>
 				<HeadingM style={styles.titleText}>more descriptions.</HeadingM>
-				<View style={styles.inputContainer}>
-					<TextInput
-						placeholder='descriptions'
-						style={styles.textInput}
-						multiline={true}
-						value={description}
-						onChangeText={handleDescription}
-					/>
-				</View>
+
+				{true && (
+					<View style={styles.inputContainer}>
+						<TextInput
+							placeholder='descriptions'
+							style={styles.textInput}
+							multiline={true}
+							value={description}
+							onChangeText={handleDescription}
+						/>
+					</View>
+				)}
 			</View>
 
 			{/* A buton for login */}
@@ -203,7 +206,6 @@ const styles = StyleSheet.create({
 	},
 	textInput: {
 		padding: 15,
-		borderWidth: 1,
 		fontSize: 16,
 		width: 260,
 		borderRadius: 5,
